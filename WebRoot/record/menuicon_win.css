@@ -1,0 +1,60 @@
+@CHARSET "UTF-8";
+.x-panel-body {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+-x-system-font:none;
+background:white none repeat scroll 0 0;
+font-family:Arial,Helvetica,sans-serif;
+font-size:11px;
+font-size-adjust:none;
+font-stretch:normal;
+font-style:normal;
+font-variant:normal;
+font-weight:normal;
+line-height:normal;
+}
+.thumb {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:white none repeat scroll 0 0;
+padding:3px;
+}
+.thumb img {
+height:120px;
+width:160px;
+}
+.thumb-wrap {
+float:left;
+margin:4px 0px 4px 4px;
+padding:5px;
+height:127px;
+width:167px;
+}
+.x-view-over {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+border:1px solid #c3d7f1;
+padding:4px;
+}
+.x-view-over .thumb {
+background-color:#d7e5f6;
+}
+.x-view-over .thumb-wrap {
+background-color:#d7e5f6;
+}
+.x-view-selected {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+border:1px solid #99BBE8;
+padding:4px;
+}
+.x-view-selected .thumb {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:transparent none repeat scroll 0 0;
+}

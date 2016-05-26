@@ -1,0 +1,1 @@
+<jsp:include page="/syspage/js_include_core.jsp"></jsp:include>
