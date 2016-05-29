@@ -102,19 +102,19 @@ public class RecordController {
 				double cLngF = 0;
 				double rLatF = 0;
 				double rLngF = 0;
-				int gpsFlag = 0;
+				int gpsDist = 0;
 				if (cgps != null && !cgps.equals("")) {
 					cLatF = Double.parseDouble(cgps.substring(cgps.indexOf(",") + 1));
 					cLngF = Double.parseDouble(cgps.substring(0, cgps.indexOf(",")));
 					if (rgps != null && !rgps.equals("")) {
 						rLatF = Double.parseDouble(rgps.substring(rgps.indexOf(",") + 1));
 						rLngF = Double.parseDouble(rgps.substring(0, rgps.indexOf(",")));
-						if (!(Math.abs(rLatF - cLatF) < 0.002 && Math.abs(rLngF - cLngF) < 0.002)) {
-							gpsFlag = 1;
-						}
+						double lngDist = Math.abs(rLngF - cLngF) * 111000;
+						double latDist = Math.abs(rLatF - cLatF) * 111000 * Math.cos(Math.PI * cLatF / 180);
+						gpsDist = (int) Math.sqrt(lngDist * lngDist + latDist * latDist);
 					}
 				}
-				row.put("gps_flag", gpsFlag);
+				row.put("gps_dist", gpsDist);
 				if (record.getVisitTime() != null) {
 					row.put("visit_time", sf.format(record.getVisitTime()));
 				}

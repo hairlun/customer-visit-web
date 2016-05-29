@@ -194,6 +194,11 @@ Ext.haode.Control.prototype = {
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
+			}, {
+				header : 'GPS误差(米)',
+				width : 100,
+				dataIndex : 'gps_dist',
+				align : 'center'
 			}]);
 			this.store = new Ext.data.Store({
 				proxy : new Ext.data.HttpProxy({
@@ -203,7 +208,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'cname', 'mname', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_flag', 'result_code', 'leave_time', 'cost']
+					fields : ['id', 'cname', 'mname', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_dist', 'result_code', 'leave_time', 'cost']
 				}),
 				remoteSort : true
 //				autoLoad : true
@@ -262,7 +267,7 @@ Ext.haode.Control.prototype = {
 				bbar : paging,
 				viewConfig : {
 					getRowClass : function(record, index, p, ds) {
-						if (record.data['gps_flag'] == 1) {
+						if (record.data['gps_dist'] > 200 ) {
 							return 'x-grid-record-red';
 						}
 					}
