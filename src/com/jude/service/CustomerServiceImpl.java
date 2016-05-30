@@ -70,6 +70,10 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> getCustomersByManagerIds(String ids) {
 		return this.customerDao.getCustomersByManagerIds(ids);
 	}
+	
+	public List<Customer> getCustomersByIds(String ids) {
+		return this.customerDao.getCustomersByIds(ids);
+	}
 
 	public boolean checkSign(String code, String serviceId) {
 		return this.customerDao.checkSign(code, serviceId);

@@ -142,6 +142,12 @@ public class CustomerDaoImpl implements CustomerDao {
 		return this.jdbcTemplate.query(sql, new CustomerRowMapper());
 	}
 
+	public List<Customer> getCustomersByIds(String ids) {
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.group_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, g.name as gname from (customer c left join customer_manager m on c.manager_id = m.id) left join customer_group g on c.group_id = g.id where c.id in ("
+				+ ids + ")";
+		return this.jdbcTemplate.query(sql, new CustomerRowMapper());
+	}
+
 	public boolean checkSign(String code, String serviceId) {
 		String sql = "select count(1) from task t left join customer c on t.customer = c.id where c.sell_number = '"
 				+ code + "' and t.id = " + serviceId;

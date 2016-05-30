@@ -180,6 +180,63 @@ public class TaskController {
 		return ExtJS.fail("发放个别任务失败，请重试！");
 	}
 
+	@RequestMapping(params = { "action=customerTask" })
+	@ResponseBody
+	public JSONObject customerTask(String cids, String content, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			if ((LoginInfo.getUser(request) == null)
+					|| (!"admin".equals(LoginInfo.getUser(request).getUsername()))) {
+				return ExtJS.ok("非admin用户不能发放任务!");
+			}
+
+			cids = cids.substring(1, cids.length());
+
+			Date start = this.sf.parse(request.getParameter("start"));
+			Date end = this.sf.parse(request.getParameter("end"));
+			if (start.after(end)) {
+				return ExtJS.ok("起始时间不能大于任务完成时间！");
+			}
+
+			List<Customer> list = this.customerService.getCustomersByIds(cids);
+			List tasks = new ArrayList();
+			int idx = 0;
+			for (Customer customer : list) {
+				if (customer.getCustomerManager() == null) {
+					continue;
+				}
+				idx++;
+				Task task = new Task();
+				task.setContent(request.getParameter("content"));
+				task.setCustomer(customer);
+				task.setManager(customer.getCustomerManager());
+				task.setStart(start);
+				task.setEnd(end);
+				task.setId(IdUtil.getId() + idx);
+				tasks.add(task);
+			}
+
+			if (tasks.size() < 1) {
+				return ExtJS.ok("无客户，请添加客户后重试！");
+			}
+			List cs = new ArrayList();
+			Map map = HttpUtils.getRequestParam(request);
+			Set<String> keySet = map.keySet();
+			for (String s : keySet) {
+				if ((s.matches("^content.+")) && (!s.equals("content"))) {
+					RecordDetail detail = new RecordDetail();
+					detail.setContent(map.get(s) + "");
+					cs.add(detail);
+				}
+			}
+			this.taskService.addTask(tasks, cs);
+			return ExtJS.ok("发放成功数量：" + tasks.size() + "， 失败数量：" + (list.size() - tasks.size()));
+		} catch (Exception e) {
+			log.error("error", e);
+		}
+		return ExtJS.fail("发放个别任务失败，请重试！");
+	}
+
 	@RequestMapping(params = { "action=newCustomerTask" })
 	@ResponseBody
 	public JSONObject newCustomerTask(String cids, String mid, String content, HttpServletRequest request,
