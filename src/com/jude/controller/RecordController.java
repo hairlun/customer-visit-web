@@ -109,12 +109,16 @@ public class RecordController {
 					if (rgps != null && !rgps.equals("")) {
 						rLatF = Double.parseDouble(rgps.substring(rgps.indexOf(",") + 1));
 						rLngF = Double.parseDouble(rgps.substring(0, rgps.indexOf(",")));
-						double lngDist = Math.abs(rLngF - cLngF) * 111000;
-						double latDist = Math.abs(rLatF - cLatF) * 111000 * Math.cos(Math.PI * cLatF / 180);
+						double lngDist = Math.abs(rLngF - cLngF) * 1110000;
+						double latDist = Math.abs(rLatF - cLatF) * 1110000 * Math.cos(Math.PI * cLatF / 180);
 						gpsDist = (int) Math.sqrt(lngDist * lngDist + latDist * latDist);
 					}
 				}
-				row.put("gps_dist", gpsDist);
+				if (gpsDist == 0) {
+					row.put("gps_dist", "0米");
+				} else {
+					row.put("gps_dist",  "" + gpsDist / 10 + (gpsDist % 10 != 0 ? "." + gpsDist % 10 : "") + "米");
+				}
 				if (record.getVisitTime() != null) {
 					row.put("visit_time", sf.format(record.getVisitTime()));
 				}

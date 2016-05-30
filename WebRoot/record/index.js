@@ -195,7 +195,7 @@ Ext.haode.Control.prototype = {
 				remoteSort : true,
 				align : 'center'
 			}, {
-				header : 'GPS误差(米)',
+				header : 'GPS误差',
 				width : 100,
 				dataIndex : 'gps_dist',
 				align : 'center'
