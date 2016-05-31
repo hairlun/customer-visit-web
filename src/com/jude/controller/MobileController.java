@@ -16,9 +16,13 @@ import com.jude.service.VisitRecordService;
 import com.jude.util.MD5;
 import com.jude.util.PagingSet;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -457,6 +461,34 @@ public class MobileController {
 			}
 			json.put("dataInfo", ja);
 			json.put("total", pset.getTotal());
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+		write(response, json);
+	}
+	
+	@RequestMapping({ "getVersionInfo" })
+	public void getVersionInfo(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		File file = new File(request.getServletContext().getRealPath("app_version_info.txt"));
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String str;
+			while ((str = br.readLine()) != null) {
+				String[] arr = str.split("=");
+				if (arr[0].equals("androidversioncode")) {
+					json.put("androidversioncode", arr[1]);
+				} else if (arr[0].equals("androidversionname")) {
+					json.put("androidversionname", arr[1]);
+				} else if (arr[0].equals("androidlink")) {
+					json.put("androidlink", arr[1]);
+				}
+			}
+			br.close();
 			json.put("retcode", "000000");
 			json.put("retinfo", "success");
 		} catch (Exception e) {
