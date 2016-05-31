@@ -230,11 +230,11 @@ public class TaskController {
 				}
 			}
 			this.taskService.addTask(tasks, cs);
-			return ExtJS.ok("发放成功数量：" + tasks.size() + "， 失败数量：" + (list.size() - tasks.size()));
+			return ExtJS.ok("发放成功！");
 		} catch (Exception e) {
 			log.error("error", e);
 		}
-		return ExtJS.fail("发放个别任务失败，请重试！");
+		return ExtJS.fail("发放客户任务失败，请重试！");
 	}
 
 	@RequestMapping(params = { "action=newCustomerTask" })
