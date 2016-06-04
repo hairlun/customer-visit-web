@@ -14,7 +14,6 @@ public class Customer extends GeneralObject implements Serializable {
 	private String backupNumber;
 	private String address;
 	private CustomerManager customerManager;
-	private CustomerGroup customerGroup;
 	private String orderType;
 	private String gps;
 	private Date lastVisitTime;
@@ -81,14 +80,6 @@ public class Customer extends GeneralObject implements Serializable {
 
 	public void setCustomerManager(CustomerManager customerManager) {
 		this.customerManager = customerManager;
-	}
-
-	public CustomerGroup getCustomerGroup() {
-		return customerGroup;
-	}
-
-	public void setCustomerGroup(CustomerGroup customerGroup) {
-		this.customerGroup = customerGroup;
 	}
 
 	public String getOrderType() {

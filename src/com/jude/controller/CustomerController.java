@@ -92,6 +92,7 @@ public class CustomerController {
 			JSONArray rows = new JSONArray();
 			JSONObject main = new JSONObject();
 			List<Customer> customerList = set.getList();
+			String gps;
 			for (Customer customer : customerList) {
 				JSONObject row = new JSONObject();
 				row.put("id", customer.getId());
@@ -104,19 +105,20 @@ public class CustomerController {
 				row.put("backup_number", customer.getBackupNumber());
 				row.put("address", customer.getAddress());
 				row.put("order_type", customer.getOrderType());
-				row.put("gps", customer.getGps());
+				gps = customer.getGps();
+				if (gps != null && !gps.equals("")) {
+					row.put("lng", gps.substring(0, gps.indexOf(",")));
+					row.put("lat", gps.substring(gps.indexOf(",") + 1));
+				} else {
+					row.put("lng", "");
+					row.put("lat", "");
+				}
 				CustomerManager cm = customer.getCustomerManager();
 				if (cm != null && cm.getName() != null && cm.getUsername() != null) {
 					row.put("mname", customer.getCustomerManager().getName() + "("
 							+ customer.getCustomerManager().getUsername() + ")");
 				} else {
 					row.put("mname", "");
-				}
-				CustomerGroup cg = customer.getCustomerGroup();
-				if (cg != null && cg.getName() != null) {
-					row.put("gname", customer.getCustomerGroup().getName());
-				} else {
-					row.put("gname", "");
 				}
 
 				Date lastVisitTime = customer.getLastVisitTime();
@@ -228,30 +230,6 @@ public class CustomerController {
 		return ExtJS.ok("删除客户成功！");
 	}
 
-	@RequestMapping(params = { "action=changeGroup" })
-	@ResponseBody
-	public JSONObject changeGroup(String cids, long gid, HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-			if (!LoginInfo.isAdmin(request)) {
-				return ExtJS.fail("非admin用户不能执行此操作！");
-			}
-			String[] ids = cids.split(",");
-			for (int i = 1; i < ids.length; ++i) {
-				long id = Long.parseLong(ids[i]);
-				CustomerGroup group = new CustomerGroup();
-				group.setId(Long.valueOf(gid));
-				Customer customer = new Customer();
-				customer.setId(Long.valueOf(id));
-				customer.setCustomerGroup(group);
-				this.customerService.updateCustomerGroup(customer);
-			}
-		} catch (Exception e) {
-			return ExtJS.fail("移动失败，请刷新页面后重试！");
-		}
-		return ExtJS.ok("移动成功！");
-	}
-
 	@RequestMapping(params = { "action=bindCustomer" })
 	@ResponseBody
 	public JSONObject bind(String cids, long mid, HttpServletRequest request,
@@ -352,10 +330,10 @@ public class CustomerController {
 				cus.setStoreName((String) list.get(3));
 				cus.setLevel((String) list.get(4));
 				cus.setPhoneNumber((String) list.get(5));
-				cus.setBackupNumber((String) list.get(8));
-				cus.setAddress((String) list.get(9));
-				cus.setOrderType((String) list.get(10));
-				cus.setGps((String) list.get(11));
+				cus.setBackupNumber((String) list.get(7));
+				cus.setAddress((String) list.get(8));
+				cus.setOrderType((String) list.get(9));
+				cus.setGps((String) list.get(10) + "," + list.get(11));
 				Date lastVisitTime = null;
 				try {
 					lastVisitTime = sdf.parse((String) list.get(12));
@@ -377,15 +355,6 @@ public class CustomerController {
 										musername.split("（")[1].length() - 1));
 						if (manager != null) {
 							cus.setCustomerManager(manager);
-						}
-					}
-				}
-				if (list.get(7) != null) {
-					String gname = (String) list.get(7);
-					if (!gname.trim().equals("")) {
-						CustomerGroup group = this.customerGroupService.getCustomerGroup(gname);
-						if (group != null) {
-							cus.setCustomerGroup(group);
 						}
 					}
 				}
@@ -539,15 +508,26 @@ public class CustomerController {
 		cols.add(new ExcelColumn("客户级别", 90));
 		cols.add(new ExcelColumn("电话号码", 100));
 		cols.add(new ExcelColumn("客户经理", 120));
-		cols.add(new ExcelColumn("客户分组", 120));
 		cols.add(new ExcelColumn("备用号码", 100));
 		cols.add(new ExcelColumn("经营地址", 240));
 		cols.add(new ExcelColumn("订货类型", 60));
-		cols.add(new ExcelColumn("GPS(经度,纬度)", 150));
+		cols.add(new ExcelColumn("GPS经度", 80));
+		cols.add(new ExcelColumn("GPS纬度", 80));
 		cols.add(new ExcelColumn("最后一次拜访时间", 180));
 
 		List rows = new ArrayList();
+		String gps;
+		String lng;
+		String lat;
 		for (Customer cus : list) {
+			gps = cus.getGps();
+			if (gps != null && !gps.equals("")) {
+				lng = gps.substring(0, gps.indexOf(","));
+				lat = gps.substring(gps.indexOf(",") + 1);
+			} else {
+				lng = "";
+				lat = "";
+			}
 			Object[] row = {
 					cus.getName(),
 					cus.getNumber(),
@@ -557,11 +537,11 @@ public class CustomerController {
 					cus.getPhoneNumber(),
 					cus.getCustomerManager() != null ? cus.getCustomerManager().getName() + "("
 							+ cus.getCustomerManager().getUsername() + ")" : "",
-					cus.getCustomerGroup() != null ? cus.getCustomerGroup().getName() : "",
 					cus.getBackupNumber(),
 					cus.getAddress(),
 					cus.getOrderType(),
-					cus.getGps(),
+					lng,
+					lat,
 					getDateFormat(cus.getLastVisitTime()) };
 
 			rows.add(row);

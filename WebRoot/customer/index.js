@@ -91,13 +91,6 @@ Ext.haode.Control.prototype = {
 				remoteSort : true,
 				align : 'center'
 			}, {
-				header : '客户分组',
-				width : 120,
-				dataIndex : 'gname',
-				sortable : true,
-				remoteSort : true,
-				align : 'center'
-			}, {
 				header : '备用号码',
 				width : 100,
 				dataIndex : 'backup_number',
@@ -123,11 +116,14 @@ Ext.haode.Control.prototype = {
 				remoteSort : true,
 				align : 'center'
 			}, {
-				header : 'GPS(经度,纬度)',
-				width : 150,
-				dataIndex : 'gps',
-				sortable : true,
-				remoteSort : true,
+				header : 'GPS经度',
+				width : 80,
+				dataIndex : 'lng',
+				align : 'center'
+			}, {
+				header : 'GPS纬度',
+				width : 80,
+				dataIndex : 'lat',
 				align : 'center'
 			}, {
 				header : '最近一次拜访时间',
@@ -146,7 +142,7 @@ Ext.haode.Control.prototype = {
 					totalProperty : 'total',
 					id : 'id',
 					fields : ['id', 'number', 'name', 'sell_number', 'store_name', 'level', 'phone_number', 
-					          'backup_number', 'address', 'order_type', 'gps', 'mname', 'gname', 'last_visit_time']
+					          'backup_number', 'address', 'order_type', 'lng', 'lat', 'mname', 'last_visit_time']
 				}),
 				remoteSort : true
 //				autoLoad : true
@@ -192,13 +188,6 @@ Ext.haode.Control.prototype = {
 				width : 45,
 				xtype : 'button',
 				handler : this.delCustomer,
-				scope : this
-			}, '-', {
-				text : '移动到分组',
-				iconCls : 'del',
-				width : 45,
-				xtype : 'button',
-				handler : this.changeGroup,
 				scope : this
 			}, '-', {
 				text : '查看二维码',
@@ -636,119 +625,6 @@ Ext.haode.Control.prototype = {
 						}
 					});
 				}
-			}
-		});
-	},
-	
-	changeGroup : function() {
-		var sm = Ext.getCmp('grid').getSelectionModel();
-		var records = sm.getSelections();
-		if (records.length < 1) {
-			alert('请选择要操作的客户');
-			return;
-		}
-		
-		var store1 = new Ext.data.Store({
-			proxy : new Ext.data.HttpProxy({
-				url : 'customerGroup.do?action=queryAll'
-			}),
-			reader : new Ext.data.JsonReader({
-				root : 'rows',
-				totalProperty : 'total',
-				id : 'id',
-				fields : ['id', 'name']
-			})
-		});
-
-		var paging = new Ext.PagingToolbar({
-			pageSize : 20,
-			store : store1,
-			displayInfo : true,
-			displayMsg : '当前显示数据 {0} - {1} of {2}',
-			emptyMsg : '没有数据'
-		});
-		
-		var win = new Ext.Window({
-			title : '移动到分组',
-			id : 'changeGroup',
-			layout : 'fit',
-			border : false,
-			modal : true,
-			width : 500,
-			height : 400,
-			items : [new Ext.grid.GridPanel({
-				id : 'grid2',
-				loadMask : true,
-//				tbar : [{
-//					xtype : 'textfield',
-//					id : 'searchName',
-//					emptyText : '请输入客户经理名称...',
-//					width : 150
-//				}, {
-//					text : '搜索',
-//					width : 45,
-//					xtype : 'button',
-//					handler : function() {
-//						
-//					}
-//				}],
-				store : store1,
-//				sm : ,
-				cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), {
-					header : '客户分组名称',
-					width : 200,
-					dataIndex : 'name',
-					align : 'center'
-				}]),
-				bbar : paging
-			})],
-			buttons : [{
-				text : '确定',
-				handler : function() {
-					var grecords = Ext.getCmp('grid2').getSelectionModel().getSelections();
-					if (grecords.length < 1) {
-						alert('请选择分组!');
-						return;
-					}
-					var cids = '';
-					for (var j = 0; j < records.length; j++) {
-						cids += ',' + records[j].get('id');
-					}
-					
-					Ext.haode.ajax({
-						url : 'customer.do?action=changeGroup',
-						params : {
-							cids : cids,
-							gid : grecords[0].get('id')
-						},
-						success : function(json, opts) {
-							alert(json.myHashMap.msg);
-							if (json.myHashMap.success) {
-								Ext.getCmp('changeGroup').close();
-								Ext.getCmp('grid').getStore().load({
-									params : {
-										start : 0,
-										limit : 20,
-										group : Ext.getCmp('combo').getValue()
-									}
-								});
-							}
-						}
-					});
-				}
-			}, {
-				text : '取消',
-				handler : function() {
-					Ext.getCmp('changeGroup').close();
-				}
-			}]
-		});
-		win.show(Ext.getBody());
-		store1.load({
-			params : {
-				start : 0,
-				limit : 20,
-				all : 0
 			}
 		});
 	},

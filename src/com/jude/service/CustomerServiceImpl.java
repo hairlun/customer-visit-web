@@ -39,10 +39,6 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
-	public void updateCustomerGroup(Customer customer) {
-		this.customerDao.updateCustomerGroup(customer);
-	}
-
 	public void updateCustomerManager(Customer customer) {
 		this.customerDao.updateCustomerManager(customer);
 	}

@@ -17,8 +17,6 @@ public abstract interface CustomerService {
 	public abstract PagingSet<Customer> getCustomers(int paramInt1, int paramInt2, int paramInt3,
 			String paramString4, String paramString5);
 
-	public abstract void updateCustomerGroup(Customer paramCustomer);
-
 	public abstract void updateCustomerManager(Customer paramCustomer);
 
 	public abstract void updateLastVisitTime(Date paramDate, Long paramLong);
