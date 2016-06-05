@@ -40,4 +40,12 @@ public class CustomerGroupServiceImpl implements CustomerGroupService {
 	public CustomerGroup getCustomerGroup(int id) {
 		return this.customerGroupDao.getCustomerGroup(id);
 	}
+
+	public void joinGroup(long customerId, long groupId) {
+		this.customerGroupDao.joinGroup(customerId, groupId);
+	}
+
+	public void exitGroup(long customerId, long groupId) {
+		this.customerGroupDao.exitGroup(customerId, groupId);
+	}
 }

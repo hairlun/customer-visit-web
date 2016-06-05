@@ -205,7 +205,7 @@ Ext.haode.Control.prototype = {
 								root : 'rows',
 								totalProperty : 'total',
 								id : 'id',
-								fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 'gname', 
+								fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
 								          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 							})
 						});
@@ -281,13 +281,6 @@ Ext.haode.Control.prototype = {
 									remoteSort : true,
 									align : 'center'
 								}, {
-									header : '客户分组',
-									width : 120,
-									dataIndex : 'gname',
-									sortable : true,
-									remoteSort : true,
-									align : 'center'
-								}, {
 									header : '备用号码',
 									width : 100,
 									dataIndex : 'backup_number',
@@ -313,7 +306,7 @@ Ext.haode.Control.prototype = {
 									remoteSort : true,
 									align : 'center'
 								}, {
-									header : 'GPS',
+									header : 'GPS(经度,纬度)',
 									width : 150,
 									dataIndex : 'gps',
 									sortable : true,
@@ -428,7 +421,7 @@ Ext.haode.Control.prototype = {
 													root : 'rows',
 													totalProperty : 'total',
 													id : 'id',
-													fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 'gname', 
+													fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
 													          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 												})
 											});
@@ -504,13 +497,6 @@ Ext.haode.Control.prototype = {
 														remoteSort : true,
 														align : 'center'
 													}, {
-														header : '客户分组',
-														width : 120,
-														dataIndex : 'gname',
-														sortable : true,
-														remoteSort : true,
-														align : 'center'
-													}, {
 														header : '备用号码',
 														width : 100,
 														dataIndex : 'backup_number',
@@ -536,7 +522,7 @@ Ext.haode.Control.prototype = {
 														remoteSort : true,
 														align : 'center'
 													}, {
-														header : 'GPS',
+														header : 'GPS(经度,纬度)',
 														width : 150,
 														dataIndex : 'gps',
 														sortable : true,
@@ -936,7 +922,7 @@ Ext.haode.Control.prototype = {
 									root : 'rows',
 									totalProperty : 'total',
 									id : 'id',
-									fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 'gname', 
+									fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
 									          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 								})
 							});
@@ -1012,13 +998,6 @@ Ext.haode.Control.prototype = {
 										remoteSort : true,
 										align : 'center'
 									}, {
-										header : '客户分组',
-										width : 120,
-										dataIndex : 'gname',
-										sortable : true,
-										remoteSort : true,
-										align : 'center'
-									}, {
 										header : '备用号码',
 										width : 100,
 										dataIndex : 'backup_number',
@@ -1044,7 +1023,7 @@ Ext.haode.Control.prototype = {
 										remoteSort : true,
 										align : 'center'
 									}, {
-										header : 'GPS',
+										header : 'GPS(经度,纬度)',
 										width : 150,
 										dataIndex : 'gps',
 										sortable : true,
@@ -1159,7 +1138,7 @@ Ext.haode.Control.prototype = {
 														root : 'rows',
 														totalProperty : 'total',
 														id : 'id',
-														fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 'gname', 
+														fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
 														          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 													})
 												});
@@ -1235,13 +1214,6 @@ Ext.haode.Control.prototype = {
 															remoteSort : true,
 															align : 'center'
 														}, {
-															header : '客户分组',
-															width : 120,
-															dataIndex : 'gname',
-															sortable : true,
-															remoteSort : true,
-															align : 'center'
-														}, {
 															header : '备用号码',
 															width : 100,
 															dataIndex : 'backup_number',
@@ -1267,7 +1239,7 @@ Ext.haode.Control.prototype = {
 															remoteSort : true,
 															align : 'center'
 														}, {
-															header : 'GPS',
+															header : 'GPS(经度,纬度)',
 															width : 150,
 															dataIndex : 'gps',
 															sortable : true,

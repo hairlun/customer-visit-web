@@ -77,6 +77,16 @@ public class CustomerGroupDaoImpl implements CustomerGroupDao {
 		return i >= 1;
 	}
 
+	public void joinGroup(long customerId, long groupId) {
+		this.jdbcTemplate.update("insert into customer_group_relation(customer_id, group_id) values(?, ?)",
+				new Object[] { customerId, groupId });
+	}
+
+	public void exitGroup(long customerId, long groupId) {
+		this.jdbcTemplate.update("delete from customer_group_relation where customer_id = ? and group_id = ?",
+				new Object[] { customerId, groupId });
+	}
+
 	public static class CustomerGroupRowMapper implements RowMapper<CustomerGroup> {
 		public CustomerGroup mapRow(ResultSet rs, int rowNum) throws SQLException {
 			CustomerGroup group = new CustomerGroup();

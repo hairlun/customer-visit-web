@@ -190,6 +190,23 @@ Ext.haode.Control.prototype = {
 				handler : this.delCustomer,
 				scope : this
 			}, '-', {
+				id : 'joinGroupBtn',
+				text : '移入分组',
+				iconCls : 'del',
+				width : 45,
+				xtype : 'button',
+				handler : this.joinGroup,
+				scope : this
+			}, '-', {
+				id : 'exitGroupBtn',
+				text : '移出分组',
+				iconCls : 'del',
+				width : 45,
+				xtype : 'button',
+				handler : this.exitGroup,
+				disabled : true,
+				scope : this
+			}, '-', {
 				text : '查看二维码',
 				iconCls : 'del',
 				width : 45,
@@ -225,6 +242,11 @@ Ext.haode.Control.prototype = {
 				editable : false,
 				listeners : {
 					'select' : function(combo, record, index) {
+						if (Ext.getCmp('combo').getValue() != -1) {
+							Ext.getCmp('exitGroupBtn').setDisabled(false);
+						} else {
+							Ext.getCmp('exitGroupBtn').setDisabled(true);
+						}
 						Ext.getCmp('grid').getStore().load({
 							params : {
 								start : 0,
@@ -613,6 +635,143 @@ Ext.haode.Control.prototype = {
 			url : 'customer.do?action=delCustomers',
 			params : {
 				ids : ids
+			},
+			success : function(json, opts) {
+				alert(json.myHashMap.msg);
+				if (json.myHashMap.success) {
+					Ext.getCmp('grid').getStore().load({
+						params : {
+							start : 0,
+							limit : 20,
+							group : Ext.getCmp('combo').getValue()
+						}
+					});
+				}
+			}
+		});
+	},
+	
+	joinGroup : function() {
+		var sm = Ext.getCmp('grid').getSelectionModel();
+		var records = sm.getSelections();
+		if (records.length < 1) {
+			alert('请选择要移入分组的客户');
+			return;
+		}
+		
+		var store1 = new Ext.data.Store({
+			proxy : new Ext.data.HttpProxy({
+				url : 'customerGroup.do?action=queryAll'
+			}),
+			reader : new Ext.data.JsonReader({
+				root : 'rows',
+				totalProperty : 'total',
+				id : 'id',
+				fields : ['id', 'name']
+			})
+		});
+		
+		var paging = new Ext.PagingToolbar({
+			pageSize : 20,
+			store : store1,
+			displayInfo : true,
+			displayMsg : '当前显示数据 {0} - {1} of {2}',
+			emptyMsg : '没有数据'
+		});
+		
+		var win = new Ext.Window({
+			title : '移入分组',
+			id : 'joinGroup',
+			layout : 'fit',
+			border : false,
+			modal : true,
+			width : 500,
+			height : 400,
+			items : [new Ext.grid.GridPanel({
+				id : 'grid2',
+				loadMask : true,
+				store : store1,
+				cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), {
+					header : '客户分组名称',
+					width : 200,
+					dataIndex : 'name',
+					align : 'center'
+				}]),
+				bbar : paging
+			})],
+			buttons : [{
+				text : '确定',
+				handler : function() {
+					var grecords = Ext.getCmp('grid2').getSelectionModel().getSelections();
+					if (grecords.length < 1) {
+						alert('请选择分组!');
+						return;
+					}
+					var cids = '';
+					for (var j = 0; j < records.length; j++) {
+						cids += ',' + records[j].get('id');
+					}
+					
+					Ext.haode.ajax({
+						url : 'customerGroup.do?action=joinGroup',
+						params : {
+							cids : cids,
+							gid : grecords[0].get('id')
+						},
+						success : function(json, opts) {
+							alert(json.myHashMap.msg);
+							if (json.myHashMap.success) {
+								Ext.getCmp('joinGroup').close();
+								Ext.getCmp('grid').getStore().load({
+									params : {
+										start : 0,
+										limit : 20,
+										group : Ext.getCmp('combo').getValue()
+									}
+								});
+							}
+						}
+					});
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					Ext.getCmp('joinGroup').close();
+				}
+			}]
+		});
+		win.show(Ext.getBody());
+		store1.load({
+			params : {
+				start : 0,
+				limit : 20,
+				all : 0
+			}
+		});
+	},
+	
+	exitGroup : function() {
+		var sm = Ext.getCmp('grid').getSelectionModel();
+		var records = sm.getSelections();
+		if (records.length < 1) {
+			alert('请选择要移出分组的客户');
+			return;
+		}
+		var ids = "";
+		for (var i = 0; i < records.length; i++) {
+			ids += ',' + records[i].get('id');
+		}
+		if (ids.length < 2) {
+			return;
+		}
+		if (!window.confirm("确认移出分组？")) {
+			return;
+		}
+		Ext.haode.ajax({
+			url : 'customerGroup.do?action=exitGroup',
+			params : {
+				cids : ids,
+				gid : Ext.getCmp('combo').getValue()
 			},
 			success : function(json, opts) {
 				alert(json.myHashMap.msg);

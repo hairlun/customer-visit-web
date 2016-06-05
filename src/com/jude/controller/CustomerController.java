@@ -106,6 +106,7 @@ public class CustomerController {
 				row.put("address", customer.getAddress());
 				row.put("order_type", customer.getOrderType());
 				gps = customer.getGps();
+				row.put("gps", gps);
 				if (gps != null && !gps.equals("")) {
 					row.put("lng", gps.substring(0, gps.indexOf(",")));
 					row.put("lat", gps.substring(gps.indexOf(",") + 1));

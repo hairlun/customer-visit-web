@@ -18,4 +18,8 @@ public abstract interface CustomerGroupDao {
 
 	public abstract PagingSet<CustomerGroup> getCustomerGroups(int paramInt1, int paramInt2,
 			String paramString3, String paramString4);
+
+	public abstract void joinGroup(long paramLong1, long paramLong2);
+
+	public abstract void exitGroup(long paramLong1, long paramLong2);
 }

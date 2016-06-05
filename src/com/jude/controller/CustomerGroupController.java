@@ -1,5 +1,6 @@
 package com.jude.controller;
 
+import com.jude.entity.Customer;
 import com.jude.entity.CustomerGroup;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
@@ -139,5 +140,45 @@ public class CustomerGroupController {
 			return ExtJS.fail("删除客户分组失败，请刷新页面后重试！");
 		}
 		return ExtJS.ok("删除客户分组成功！");
+	}
+	
+	@RequestMapping(params = { "action=joinGroup" })
+	@ResponseBody
+	public JSONObject joinGroup(String cids, long gid, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			if (!LoginInfo.isAdmin(request)) {
+				return ExtJS.fail("非admin用户不能执行此操作！");
+			}
+			String[] ids = cids.split(",");
+			for (int i = 1; i < ids.length; ++i) {
+				long customerId = Long.parseLong(ids[i]);
+				long groupId = Long.valueOf(gid);
+				this.customerGroupService.joinGroup(customerId, groupId);
+			}
+		} catch (Exception e) {
+			return ExtJS.fail("移入失败，请刷新页面后重试！");
+		}
+		return ExtJS.ok("移入成功！");
+	}
+	
+	@RequestMapping(params = { "action=exitGroup" })
+	@ResponseBody
+	public JSONObject exitGroup(String cids, long gid, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			if (!LoginInfo.isAdmin(request)) {
+				return ExtJS.fail("非admin用户不能执行此操作！");
+			}
+			String[] ids = cids.split(",");
+			for (int i = 1; i < ids.length; ++i) {
+				long customerId = Long.parseLong(ids[i]);
+				long groupId = Long.valueOf(gid);
+				this.customerGroupService.exitGroup(customerId, groupId);
+			}
+		} catch (Exception e) {
+			return ExtJS.fail("移出失败，请刷新页面后重试！");
+		}
+		return ExtJS.ok("移出成功！");
 	}
 }
