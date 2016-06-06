@@ -67,31 +67,139 @@ Ext.haode.Control.prototype = {
 						     }
 						});
 					}
+//				}, {
+//					text : '个别任务',
+//					handler : function() {
+//						if (!Ext.getCmp('form').getForm().isValid()) {
+//							alert('请正确填写表单');
+//							return;
+//						}
+//						
+//						var sm =  new Ext.grid.CheckboxSelectionModel();
+//						var store1 = new Ext.data.Store({
+//							proxy : new Ext.data.HttpProxy({
+//								url : 'customerManager.do?action=queryAll'
+//							}),
+//							reader : new Ext.data.JsonReader({
+//								root : 'rows',
+//								totalProperty : 'total',
+//								id : 'id',
+//								fields : ['id', 'name', 'username']
+//							})
+//						});
+//
+//						var paging = new Ext.PagingToolbar({
+//							pageSize : 20,
+//							store : store1,
+//							displayInfo : true,
+//							displayMsg : '当前显示数据 {0} - {1} of {2}',
+//							emptyMsg : '没有数据'
+//						});
+//						
+//						var win = new Ext.Window({
+//							title : '客户经理',
+//							id : 'bind',
+//							layout : 'fit',
+//							border : false,
+//							modal : true,
+//							width : 500,
+//							height : 400,
+//							items : [new Ext.grid.GridPanel({
+//								id : 'grid1',
+//								loadMask : true,
+////								tbar : [{
+////									xtype : 'textfield',
+////									id : 'searchName',
+////									emptyText : '请输入客户经理名称...',
+////									width : 150
+////								}, {
+////									text : '搜索',
+////									width : 45,
+////									xtype : 'button',
+////									handler : function() {
+////										
+////									}
+////								}],
+//								store : store1,
+//								sm : sm,
+//								cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), sm, {
+//									header : '客户经理名称',
+//									width : 200,
+//									dataIndex : 'name',
+//									align : 'center'
+//								}, {
+//									header : '客户经理用户名',
+//									width : 230,
+//									dataIndex : 'username',
+//									align : 'center'
+//								}]),
+//								bbar : paging
+//							})],
+//							buttons : [{
+//								text : '确定',
+//								handler : function() {
+//									var mrecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
+//									if (mrecords.length < 1) {
+//										alert('请选择要做任务的客户经理!');
+//										return;
+//									}
+//									var mids = '';
+//									for (var j = 0; j < mrecords.length; j++) {
+//										mids += ',' + mrecords[j].get('id');
+//									}
+//									
+//									Ext.getCmp('bind').close();
+//									Ext.getCmp('form').getForm().submit({
+//										 waitTitle : '提示',
+//									     waitMsg : '正在提交数据请稍后...',
+//									     url : 'task.do?action=indevi',
+//									     params : {
+//									    	 mids : mids 
+//									     },
+//									     method : 'post',
+//									     success : function(form, action) {
+//									    	 alert(action.result.myHashMap.msg);
+//									     },
+//									     failure : function(form, action) {
+//									    	 alert(action.result.myHashMap.msg);
+//									     }
+//									});
+//									
+//								}
+//							}, {
+//								text : '取消',
+//								handler : function() {
+//									Ext.getCmp('bind').close();
+//								}
+//							}]
+//						});
+//						win.show(Ext.getBody());
+//						store1.load({
+//							params : {
+//								start : 0,
+//								limit : 20
+//							}
+//						});
+//						
+//					}
 				}, {
-					text : '个别任务',
+					text : '分组任务',
 					handler : function() {
 						if (!Ext.getCmp('form').getForm().isValid()) {
 							alert('请正确填写表单');
 							return;
 						}
 						
-//						var sm = Ext.getCmp('grid').getSelectionModel();
-//						var records = sm.getSelections();
-//						if (records.length < 1) {
-//							alert('请选择要绑定的客户');
-//							return;
-//						}
-						
 						var sm =  new Ext.grid.CheckboxSelectionModel();
 						var store1 = new Ext.data.Store({
 							proxy : new Ext.data.HttpProxy({
-								url : 'customerManager.do?action=queryAll'
+								url : 'customerGroup.do?action=queryAll'
 							}),
 							reader : new Ext.data.JsonReader({
 								root : 'rows',
 								totalProperty : 'total',
 								id : 'id',
-								fields : ['id', 'name', 'username']
+								fields : ['id', 'name']
 							})
 						});
 
@@ -104,7 +212,7 @@ Ext.haode.Control.prototype = {
 						});
 						
 						var win = new Ext.Window({
-							title : '客户经理',
+							title : '客户分组',
 							id : 'bind',
 							layout : 'fit',
 							border : false,
@@ -114,30 +222,12 @@ Ext.haode.Control.prototype = {
 							items : [new Ext.grid.GridPanel({
 								id : 'grid1',
 								loadMask : true,
-//								tbar : [{
-//									xtype : 'textfield',
-//									id : 'searchName',
-//									emptyText : '请输入客户经理名称...',
-//									width : 150
-//								}, {
-//									text : '搜索',
-//									width : 45,
-//									xtype : 'button',
-//									handler : function() {
-//										
-//									}
-//								}],
 								store : store1,
 								sm : sm,
 								cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), sm, {
-									header : '客户经理名称',
+									header : '客户分组名称',
 									width : 200,
 									dataIndex : 'name',
-									align : 'center'
-								}, {
-									header : '客户经理用户名',
-									width : 230,
-									dataIndex : 'username',
 									align : 'center'
 								}]),
 								bbar : paging
@@ -145,23 +235,23 @@ Ext.haode.Control.prototype = {
 							buttons : [{
 								text : '确定',
 								handler : function() {
-									var mrecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
-									if (mrecords.length < 1) {
-										alert('请选择要做任务的客户经理!');
+									var grecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
+									if (grecords.length < 1) {
+										alert('请选择客户分组!');
 										return;
 									}
-									var mids = '';
-									for (var j = 0; j < mrecords.length; j++) {
-										mids += ',' + mrecords[j].get('id');
+									var gids = '';
+									for (var j = 0; j < grecords.length; j++) {
+										gids += ',' + grecords[j].get('id');
 									}
 									
 									Ext.getCmp('bind').close();
 									Ext.getCmp('form').getForm().submit({
 										 waitTitle : '提示',
 									     waitMsg : '正在提交数据请稍后...',
-									     url : 'task.do?action=indevi',
+									     url : 'task.do?action=group',
 									     params : {
-									    	 mids : mids 
+									    	 gids : gids 
 									     },
 									     method : 'post',
 									     success : function(form, action) {
@@ -184,7 +274,8 @@ Ext.haode.Control.prototype = {
 						store1.load({
 							params : {
 								start : 0,
-								limit : 20
+								limit : 20,
+								all : 0
 							}
 						});
 						
@@ -784,31 +875,140 @@ Ext.haode.Control.prototype = {
 							     }
 							});
 						}
+//					}, {
+//						text : '个别任务',
+//						handler : function() {
+//							if (!Ext.getCmp('form').getForm().isValid()) {
+//								alert('请正确填写表单');
+//								return;
+//							}
+//							
+//							
+//							var sm =  new Ext.grid.CheckboxSelectionModel();
+//							var store1 = new Ext.data.Store({
+//								proxy : new Ext.data.HttpProxy({
+//									url : 'customerManager.do?action=queryAll'
+//								}),
+//								reader : new Ext.data.JsonReader({
+//									root : 'rows',
+//									totalProperty : 'total',
+//									id : 'id',
+//									fields : ['id', 'name', 'username']
+//								})
+//							});
+//
+//							var paging = new Ext.PagingToolbar({
+//								pageSize : 20,
+//								store : store1,
+//								displayInfo : true,
+//								displayMsg : '当前显示数据 {0} - {1} of {2}',
+//								emptyMsg : '没有数据'
+//							});
+//							
+//							var win = new Ext.Window({
+//								title : '客户经理',
+//								id : 'bind',
+//								layout : 'fit',
+//								border : false,
+//								modal : true,
+//								width : 500,
+//								height : 400,
+//								items : [new Ext.grid.GridPanel({
+//									id : 'grid1',
+//									loadMask : true,
+////									tbar : [{
+////										xtype : 'textfield',
+////										id : 'searchName',
+////										emptyText : '请输入客户经理名称...',
+////										width : 150
+////									}, {
+////										text : '搜索',
+////										width : 45,
+////										xtype : 'button',
+////										handler : function() {
+////											
+////										}
+////									}],
+//									store : store1,
+//									sm : sm,
+//									cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), sm, {
+//										header : '客户经理名称',
+//										width : 200,
+//										dataIndex : 'name',
+//										align : 'center'
+//									}, {
+//										header : '客户经理用户名',
+//										width : 230,
+//										dataIndex : 'username',
+//										align : 'center'
+//									}]),
+//									bbar : paging
+//								})],
+//								buttons : [{
+//									text : '确定',
+//									handler : function() {
+//										var mrecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
+//										if (mrecords.length < 1) {
+//											alert('请选择要做任务的客户经理!');
+//											return;
+//										}
+//										var mids = '';
+//										for (var j = 0; j < mrecords.length; j++) {
+//											mids += ',' + mrecords[j].get('id');
+//										}
+//										
+//										Ext.getCmp('bind').close();
+//										Ext.getCmp('form').getForm().submit({
+//											 waitTitle : '提示',
+//										     waitMsg : '正在提交数据请稍后...',
+//										     url : 'task.do?action=indevi',
+//										     params : {
+//										    	 mids : mids 
+//										     },
+//										     method : 'post',
+//										     success : function(form, action) {
+//										    	 alert(action.result.myHashMap.msg);
+//										     },
+//										     failure : function(form, action) {
+//										    	 alert(action.result.myHashMap.msg);
+//										     }
+//										});
+//										
+//									}
+//								}, {
+//									text : '取消',
+//									handler : function() {
+//										Ext.getCmp('bind').close();
+//									}
+//								}]
+//							});
+//							win.show(Ext.getBody());
+//							store1.load({
+//								params : {
+//									start : 0,
+//									limit : 20
+//								}
+//							});
+//							
+//						}
 					}, {
-						text : '个别任务',
+						text : '分组任务',
 						handler : function() {
 							if (!Ext.getCmp('form').getForm().isValid()) {
 								alert('请正确填写表单');
 								return;
 							}
 							
-//							var sm = Ext.getCmp('grid').getSelectionModel();
-//							var records = sm.getSelections();
-//							if (records.length < 1) {
-//								alert('请选择要绑定的客户');
-//								return;
-//							}
-							
 							var sm =  new Ext.grid.CheckboxSelectionModel();
 							var store1 = new Ext.data.Store({
 								proxy : new Ext.data.HttpProxy({
-									url : 'customerManager.do?action=queryAll'
+									url : 'customerGroup.do?action=queryAll'
 								}),
 								reader : new Ext.data.JsonReader({
 									root : 'rows',
 									totalProperty : 'total',
 									id : 'id',
-									fields : ['id', 'name', 'username']
+									fields : ['id', 'name']
 								})
 							});
 
@@ -821,7 +1021,7 @@ Ext.haode.Control.prototype = {
 							});
 							
 							var win = new Ext.Window({
-								title : '客户经理',
+								title : '客户分组',
 								id : 'bind',
 								layout : 'fit',
 								border : false,
@@ -831,30 +1031,12 @@ Ext.haode.Control.prototype = {
 								items : [new Ext.grid.GridPanel({
 									id : 'grid1',
 									loadMask : true,
-//									tbar : [{
-//										xtype : 'textfield',
-//										id : 'searchName',
-//										emptyText : '请输入客户经理名称...',
-//										width : 150
-//									}, {
-//										text : '搜索',
-//										width : 45,
-//										xtype : 'button',
-//										handler : function() {
-//											
-//										}
-//									}],
 									store : store1,
 									sm : sm,
 									cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), sm, {
-										header : '客户经理名称',
+										header : '客户分组名称',
 										width : 200,
 										dataIndex : 'name',
-										align : 'center'
-									}, {
-										header : '客户经理用户名',
-										width : 230,
-										dataIndex : 'username',
 										align : 'center'
 									}]),
 									bbar : paging
@@ -862,23 +1044,23 @@ Ext.haode.Control.prototype = {
 								buttons : [{
 									text : '确定',
 									handler : function() {
-										var mrecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
-										if (mrecords.length < 1) {
-											alert('请选择要做任务的客户经理!');
+										var grecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
+										if (grecords.length < 1) {
+											alert('请选择客户分组!');
 											return;
 										}
-										var mids = '';
-										for (var j = 0; j < mrecords.length; j++) {
-											mids += ',' + mrecords[j].get('id');
+										var gids = '';
+										for (var j = 0; j < grecords.length; j++) {
+											gids += ',' + grecords[j].get('id');
 										}
 										
 										Ext.getCmp('bind').close();
 										Ext.getCmp('form').getForm().submit({
 											 waitTitle : '提示',
 										     waitMsg : '正在提交数据请稍后...',
-										     url : 'task.do?action=indevi',
+										     url : 'task.do?action=group',
 										     params : {
-										    	 mids : mids 
+										    	 gids : gids 
 										     },
 										     method : 'post',
 										     success : function(form, action) {
@@ -901,7 +1083,8 @@ Ext.haode.Control.prototype = {
 							store1.load({
 								params : {
 									start : 0,
-									limit : 20
+									limit : 20,
+									all : 0
 								}
 							});
 							

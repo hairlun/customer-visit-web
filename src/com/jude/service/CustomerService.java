@@ -30,6 +30,8 @@ public abstract interface CustomerService {
 	public abstract Customer getCustomerByNumber(String paramString);
 
 	public abstract List<Customer> getCustomersByManagerIds(String paramString);
+
+	public abstract List<Customer> getCustomersByGroupIds(String paramString);
 	
 	public abstract List<Customer> getCustomersByIds(String paramString);
 

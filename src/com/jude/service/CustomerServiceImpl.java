@@ -66,7 +66,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> getCustomersByManagerIds(String ids) {
 		return this.customerDao.getCustomersByManagerIds(ids);
 	}
-	
+
+	public List<Customer> getCustomersByGroupIds(String ids) {
+		return this.customerDao.getCustomersByGroupIds(ids);
+	}
+
 	public List<Customer> getCustomersByIds(String ids) {
 		return this.customerDao.getCustomersByIds(ids);
 	}

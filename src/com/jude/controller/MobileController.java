@@ -409,7 +409,7 @@ public class MobileController {
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		StringBuffer where = new StringBuffer();
-		if (type == 2) {
+		if (type != 2) {
 			where.append(" and t.complete = ").append(type);
 		}
 		if (userId != 1) {
