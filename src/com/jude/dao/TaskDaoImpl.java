@@ -35,12 +35,11 @@ public class TaskDaoImpl implements TaskDao {
 	private static SimpleDateFormat ssf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	public void addTasks(List<Task> tasks, List<RecordDetail> cs) {
-		int idx = 0;
 		for (Task task : tasks) {
 			addTask(task);
-			idx++;
+			
 			VisitRecord record = new VisitRecord();
-			record.setId(IdUtil.getId() + idx);
+			record.setId(IdUtil.getId());
 			record.setTaskId(task.getId());
 			record.setCustomer(task.getCustomer());
 			record.setCustomerManager(task.getManager());
@@ -50,8 +49,8 @@ public class TaskDaoImpl implements TaskDao {
 		}
 	}
 
-	public void delete(String taskId) {
-		this.jdbcTemplate.update("delete from task where id = ?", new Object[] { taskId });
+	public void delete(long taskId) {
+		this.jdbcTemplate.update("delete from task where id = ?", new Object[] { Long.valueOf(taskId) });
 	}
 
 	public List<Task> getManagerTask(String username) {
@@ -59,10 +58,10 @@ public class TaskDaoImpl implements TaskDao {
 		return this.jdbcTemplate.query(sql, new Object[] { username }, new TaskRowMapper());
 	}
 
-	public Task getTask(String taskId) {
+	public Task getTask(long taskId) {
 		List list = this.jdbcTemplate
-				.query("select t.complete, t.reply, t.content, t.start_time, t.end_time, t.create_time, t.id, c.id, c.name, c.sell_number, c.phone_number, c.backup_number, m.id from task t left join customer c on t.customer = c.id left join customer_manager m on t.manager = m.id where t.id = '"
-						+ taskId + "'", new TaskRowMapper());
+				.query("select t.complete, t.reply, t.content, t.start_time, t.end_time, t.create_time, t.id, c.id, c.name, c.sell_number, c.phone_number, c.backup_number, m.id from task t left join customer c on t.customer = c.id left join customer_manager m on t.manager = m.id where t.id = "
+						+ taskId, new TaskRowMapper());
 		if ((list == null) || (list.size() == 0)) {
 			return null;
 		}
@@ -72,13 +71,13 @@ public class TaskDaoImpl implements TaskDao {
 	public void addTask(Task task) {
 		StringBuffer sb = new StringBuffer(
 				"insert into task(id, start_time, end_time, manager, customer, content, create_time) values");
-		sb.append("('").append(task.getId()).append("',").append(sf.format(task.getStart()))
+		sb.append("(").append(task.getId()).append(",").append(sf.format(task.getStart()))
 				.append(",").append(sf.format(task.getEnd())).append(",")
 				.append(task.getManager().getId()).append(",").append(task.getCustomer().getId())
 				.append(",'").append(task.getContent()).append("','")
-				.append(ssf.format(new Date())).append("'),");
+				.append(ssf.format(new Date())).append("')");
 
-		this.jdbcTemplate.update(sb.substring(0, sb.length() - 1));
+		this.jdbcTemplate.update(sb.toString());
 	}
 
 	public List<Task> getManagerTask(long managerId) {
@@ -103,6 +102,12 @@ public class TaskDaoImpl implements TaskDao {
 		PagingSet<Task> pageSet = h.handle(new TaskRowMapper());
 		return pageSet;
 	}
+
+	public List<Task> getTasksByVisitRecordIds(String vids) {
+		String sql = "select t.complete, t.reply, t.content, t.start_time, t.end_time, t.create_time, t.id, c.id, c.name, c.sell_number, c.phone_number, c.backup_number, m.id, v.id from task t left join customer c on t.customer = c.id left join customer_manager m on t.manager = m.id left join visit_record v on t.id = v.task_id where v.id in ("
+				+ vids + ")";
+		return this.jdbcTemplate.query(sql, new TaskRowMapper());
+	}
 	
 	public void reject(String taskIds, String reason) {
 		this.jdbcTemplate.update(
@@ -110,16 +115,16 @@ public class TaskDaoImpl implements TaskDao {
 				new Object[] { reason });
 	}
 	
-	public void complete(String taskId) {
+	public void complete(long taskId) {
 		this.jdbcTemplate.update(
 				"update task set complete = 1, reject = 0 where id = ?",
-				new Object[] { taskId });
+				new Object[] { Long.valueOf(taskId) });
 	}
 
 	public static class TaskRowMapper implements RowMapper<Task> {
 		public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Task task = new Task();
-			task.setId(rs.getString("t.id"));
+			task.setId(rs.getLong("t.id"));
 			task.setContent(rs.getString("t.content"));
 			task.setStart(rs.getDate("t.start_time"));
 			task.setEnd(rs.getDate("t.end_time"));

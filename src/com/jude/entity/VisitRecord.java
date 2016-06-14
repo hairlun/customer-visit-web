@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class VisitRecord implements Serializable {
 	private static final long serialVersionUID = 4045141914433175779L;
-	private String id;
+	private long id;
 	private Customer customer;
 	private CustomerManager customerManager;
 	private int type;
@@ -15,7 +15,7 @@ public class VisitRecord implements Serializable {
 	private String gps;
 	private String city;
 	private int images;
-	private String taskId;
+	private long taskId;
 	private int resultCode;
 	private int costTime;
 	private String reply;
@@ -45,11 +45,11 @@ public class VisitRecord implements Serializable {
 		this.images = images;
 	}
 
-	public String getTaskId() {
+	public long getTaskId() {
 		return this.taskId;
 	}
 
-	public void setTaskId(String taskId) {
+	public void setTaskId(long taskId) {
 		this.taskId = taskId;
 	}
 
@@ -133,11 +133,11 @@ public class VisitRecord implements Serializable {
 		this.reject = reject;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 }

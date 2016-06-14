@@ -208,7 +208,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'cname', 'mname', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_dist', 'result_code', 'leave_time', 'cost']
+					fields : ['id', 'cname', 'mname', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_dist', 'gps_flag', 'result_code', 'leave_time', 'cost']
 				}),
 				remoteSort : true
 //				autoLoad : true
@@ -267,7 +267,7 @@ Ext.haode.Control.prototype = {
 				bbar : paging,
 				viewConfig : {
 					getRowClass : function(record, index, p, ds) {
-						if (record.data['gps_dist'] > 200 ) {
+						if (record.data['gps_flag'] == "1") {
 							return 'x-grid-record-red';
 						}
 					}
@@ -286,7 +286,7 @@ Ext.haode.Control.prototype = {
 		}
 		var ids = "";
 		for (var i = 0; i < records.length; i++) {
-			ids += ",'" + records[i].get('id') + "'";
+			ids += "," + records[i].get('id');
 		}
 		if (ids.length < 2) {
 			return;
@@ -322,7 +322,7 @@ Ext.haode.Control.prototype = {
 		}
 		var ids = "";
 		for (var i = 0; i < records.length; i++) {
-			ids += ",'" + records[i].get('id') + "'";
+			ids += "," + records[i].get('id');
 		}
 		if (ids.length < 2) {
 			return;

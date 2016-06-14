@@ -334,7 +334,13 @@ public class CustomerController {
 				cus.setBackupNumber((String) list.get(7));
 				cus.setAddress((String) list.get(8));
 				cus.setOrderType((String) list.get(9));
-				cus.setGps((String) list.get(10) + "," + list.get(11));
+				String lng = (String) list.get(10);
+				String lat = (String) list.get(11);
+				if (lng != null && !lng.equals("") && lat != null && !lat.equals("")) {
+					cus.setGps(lng + "," + lat);
+				} else {
+					cus.setGps("");
+				}
 				Date lastVisitTime = null;
 				try {
 					lastVisitTime = sdf.parse((String) list.get(12));

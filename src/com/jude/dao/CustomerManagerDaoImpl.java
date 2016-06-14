@@ -54,10 +54,10 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 		return null;
 	}
 
-	public CustomerManager getCustomerManager(int id) {
+	public CustomerManager getCustomerManager(long id) {
 		List list = this.jdbcTemplate.query(
 				"select id, name, username, password from customer_manager where id = ?",
-				new Object[] { Integer.valueOf(id) }, new CustomerManagerRowMapper());
+				new Object[] { Long.valueOf(id) }, new CustomerManagerRowMapper());
 
 		if ((list != null) && (list.size() > 0)) {
 			return (CustomerManager) list.get(0);

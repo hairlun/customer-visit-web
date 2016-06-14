@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -116,7 +117,7 @@ public class MobileController {
 				return;
 			}
 			
-			String taskId = request.getParameter("serviceId");
+			long taskId = Long.parseLong(request.getParameter("serviceId"));
 			VisitRecord record = this.recordService.getVisitRecordByTaskId(taskId);
 			Customer customer = record.getCustomer();
 			String code = request.getParameter("code");
@@ -138,6 +139,12 @@ public class MobileController {
 				String city = request.getParameter("city");
 				String lat = request.getParameter("lat");
 				String lng = request.getParameter("lng");
+				if (lat == null || lng == null) {
+					json.put("retcode", "000003");
+					json.put("retinfo", "没有定位信息，请等定位完成再扫码！");
+					write(response, json);
+					return;
+				}
 				double latF = Double.parseDouble(lat);
 				double lngF = Double.parseDouble(lng);
 				String gps = customer.getGps();
@@ -146,10 +153,12 @@ public class MobileController {
 				if (gps != null && !gps.equals("")) {
 					cLatF = Double.parseDouble(gps.substring(gps.indexOf(",") + 1));
 					cLngF = Double.parseDouble(gps.substring(0, gps.indexOf(",")));
-					if (lng == null || lat == null ||
-							!(Math.abs(latF - cLatF) < 0.002 && Math.abs(lngF - cLngF) < 0.002)) {
+					double lngDist = Math.abs(lngF - cLngF) * 1110000;
+					double latDist = Math.abs(latF - cLatF) * 1110000 * Math.cos(Math.PI * cLatF / 180);
+					double gpsDist = (int) Math.sqrt(lngDist * lngDist + latDist * latDist);
+					if (gpsDist > 2000) {
 						json.put("retcode", "000003");
-						json.put("retinfo", "没有定位信息或定位不正确！");
+						json.put("retinfo", "定位不正确！");
 						write(response, json);
 						return;
 					}
@@ -238,7 +247,7 @@ public class MobileController {
 	public void queryServiceStatus(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject json = new JSONObject();
 		try {
-			String serviceId = request.getParameter("serviceId");
+			long serviceId = Long.parseLong(request.getParameter("serviceId"));
 			VisitRecord vr = this.recordService.getVisitRecordByTaskId(serviceId);
 			int codeSignFlag = 1;
 			int codeExitFlag = 1;
@@ -285,8 +294,8 @@ public class MobileController {
 		JSONObject json = new JSONObject();
 		JSONArray ja = new JSONArray();
 		try {
-			List<RecordDetail> ts = this.recordService.getDetails(request
-					.getParameter("serviceId"));
+			List<RecordDetail> ts = this.recordService.getDetails(Long.parseLong(request
+					.getParameter("serviceId")));
 			if ((ts != null) && (ts.size() > 0)) {
 				for (RecordDetail t : ts) {
 					JSONObject js = new JSONObject();
@@ -312,14 +321,9 @@ public class MobileController {
 		JSONObject json = new JSONObject();
 		try {
 			String ids = request.getParameter("ids");
-			String serviceId = request.getParameter("serviceId");
-			String[] idArr = ids.split(",");
-			StringBuffer sb = new StringBuffer();
-			for (String id : idArr) {
-				sb.append(",'").append(id).append("'");
-			}
+			long serviceId = Long.parseLong(request.getParameter("serviceId"));
 
-			this.recordService.submit(sb.substring(1), serviceId);
+			this.recordService.submit(ids.substring(1), serviceId);
 
 			json.put("retcode", "000000");
 			json.put("retinfo", "success");
@@ -338,7 +342,7 @@ public class MobileController {
 		try {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			List mfs = multipartRequest.getFiles("file");
-			String taskId = request.getParameter("serviceId");
+			long taskId = Long.parseLong(request.getParameter("serviceId"));
 			VisitRecord record = this.recordService.getVisitRecordByTaskId(taskId);
 			String path = request.getServletContext().getRealPath("/recordImages") + File.separator
 					+ record.getId() + "_";
@@ -362,7 +366,7 @@ public class MobileController {
 		JSONObject json = new JSONObject();
 		try {
 			String code = request.getParameter("code");
-			String taskId = request.getParameter("serviceId");
+			long taskId = Long.parseLong(request.getParameter("serviceId"));
 			VisitRecord record = this.recordService.getVisitRecordByTaskId(taskId);
 			Customer customer = record.getCustomer();
 			if (code != null) {
@@ -497,6 +501,18 @@ public class MobileController {
 			json.put("retinfo", "exception");
 		}
 		write(response, json);
+	}
+
+	@RequestMapping({ "getApp" })
+	public void getApp(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String path = request.getParameter("path");
+		File file = new File(path);
+		if (!file.exists()) {
+			file = new File(request.getServletContext().getRealPath("/app")
+					+ File.separator + path);
+		}
+		InputStream is = new FileInputStream(file);
+		IOUtils.copy(is, response.getOutputStream());
 	}
 
 	private ModelSwitch isSwitchOpen() {

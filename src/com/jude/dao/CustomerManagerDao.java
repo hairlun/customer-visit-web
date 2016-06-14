@@ -14,7 +14,7 @@ public abstract interface CustomerManagerDao {
 
 	public abstract void updateCustomerManager(CustomerManager paramCustomerManager);
 
-	public abstract CustomerManager getCustomerManager(int paramInt);
+	public abstract CustomerManager getCustomerManager(long paramLong);
 
 	public abstract PagingSet<CustomerManager> getCustomerMangers(int paramInt1, int paramInt2,
 			String paramString3, String paramString4);

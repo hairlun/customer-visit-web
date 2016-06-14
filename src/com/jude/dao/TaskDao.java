@@ -13,16 +13,18 @@ public abstract interface TaskDao {
 
 	public abstract List<Task> getManagerTask(String paramString);
 
-	public abstract Task getTask(String paramString);
+	public abstract Task getTask(long paramLong);
 
 	public abstract List<Task> getManagerTask(long paramLong);
 
 	public abstract PagingSet<Task> getManagerTask(long paramLong1, int paramInt2, int paramInt3,
 			int paramInt4, String paramString5, String paramString6, String paramString7);
 
-	public abstract void delete(String paramString);
+	public abstract List<Task> getTasksByVisitRecordIds(String paramString);
+
+	public abstract void delete(long paramLong);
 	
-	public abstract void complete(String paramString);
+	public abstract void complete(long paramLong);
 	
 	public abstract void reject(String paramString1, String paramString2);
 }

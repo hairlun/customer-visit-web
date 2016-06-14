@@ -37,7 +37,7 @@ public class CustomerGroupServiceImpl implements CustomerGroupService {
 		this.customerGroupDao.updateCustomerGroup(manager);
 	}
 
-	public CustomerGroup getCustomerGroup(int id) {
+	public CustomerGroup getCustomerGroup(long id) {
 		return this.customerGroupDao.getCustomerGroup(id);
 	}
 

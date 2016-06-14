@@ -30,7 +30,7 @@ public class VisitRecordServiceImpl implements VisitRecordService {
 			}
 	}
 
-	public VisitRecord getVisitRecord(String id) {
+	public VisitRecord getVisitRecord(long id) {
 		return this.visitRecordDao.getVisitRecord(id);
 	}
 
@@ -47,15 +47,15 @@ public class VisitRecordServiceImpl implements VisitRecordService {
 		this.visitRecordDao.update(record);
 	}
 
-	public VisitRecord getVisitRecordByTaskId(String taskId) {
+	public VisitRecord getVisitRecordByTaskId(long taskId) {
 		return this.visitRecordDao.getVisitRecordByTaskId(taskId);
 	}
 
-	public List<RecordDetail> getDetails(String id) {
+	public List<RecordDetail> getDetails(long id) {
 		return this.visitRecordDao.getDetails(id);
 	}
 
-	public void submit(String ids, String serviceId) {
+	public void submit(String ids, long serviceId) {
 		this.visitRecordDao.submit(ids, serviceId);
 	}
 }

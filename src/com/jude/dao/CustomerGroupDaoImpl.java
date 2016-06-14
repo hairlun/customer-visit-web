@@ -52,10 +52,10 @@ public class CustomerGroupDaoImpl implements CustomerGroupDao {
 		return null;
 	}
 
-	public CustomerGroup getCustomerGroup(int id) {
+	public CustomerGroup getCustomerGroup(long id) {
 		List<CustomerGroup> list = this.jdbcTemplate.query(
 				"select id, name from customer_group where id = ?",
-				new Object[] { Integer.valueOf(id) }, new CustomerGroupRowMapper());
+				new Object[] { Long.valueOf(id) }, new CustomerGroupRowMapper());
 
 		if ((list != null) && (list.size() > 0)) {
 			return (CustomerGroup) list.get(0);
@@ -79,12 +79,12 @@ public class CustomerGroupDaoImpl implements CustomerGroupDao {
 
 	public void joinGroup(long customerId, long groupId) {
 		this.jdbcTemplate.update("insert into customer_group_relation(customer_id, group_id) values(?, ?)",
-				new Object[] { customerId, groupId });
+				new Object[] { Long.valueOf(customerId), Long.valueOf(groupId) });
 	}
 
 	public void exitGroup(long customerId, long groupId) {
 		this.jdbcTemplate.update("delete from customer_group_relation where customer_id = ? and group_id = ?",
-				new Object[] { customerId, groupId });
+				new Object[] { Long.valueOf(customerId), Long.valueOf(groupId) });
 	}
 
 	public static class CustomerGroupRowMapper implements RowMapper<CustomerGroup> {

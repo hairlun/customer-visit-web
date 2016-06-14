@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
 		return this.taskDao.getManagerTask(username);
 	}
 
-	public Task getTask(String id) {
+	public Task getTask(long id) {
 		return this.taskDao.getTask(id);
 	}
 
@@ -41,11 +41,15 @@ public class TaskServiceImpl implements TaskService {
 		return this.taskDao.getManagerTask(managerId, start, limit, type, keyword, startTime, endTime);
 	}
 
-	public void delete(String taskId) {
+	public List<Task> getTasksByVisitRecordIds(String vids) {
+		return this.taskDao.getTasksByVisitRecordIds(vids);
+	}
+
+	public void delete(long taskId) {
 		this.taskDao.delete(taskId);
 	}
 	
-	public void complete(String taskId) {
+	public void complete(long taskId) {
 		this.taskDao.complete(taskId);
 	}
 	

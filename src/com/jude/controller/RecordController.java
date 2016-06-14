@@ -2,6 +2,7 @@ package com.jude.controller;
 
 import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
+import com.jude.entity.Task;
 import com.jude.entity.VisitRecord;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
@@ -114,10 +115,17 @@ public class RecordController {
 						gpsDist = (int) Math.sqrt(lngDist * lngDist + latDist * latDist);
 					}
 				}
-				if (gpsDist == 0) {
+				if (rgps == null || rgps.equals("")) {
+					row.put("gps_dist", "");
+				} else if (gpsDist == 0) {
 					row.put("gps_dist", "0米");
 				} else {
 					row.put("gps_dist",  "" + gpsDist / 10 + (gpsDist % 10 != 0 ? "." + gpsDist % 10 : "") + "米");
+				}
+				if (gpsDist > 2000) {
+					row.put("gps_flag", "1");
+				} else {
+					row.put("gps_flag", "0");
 				}
 				if (record.getVisitTime() != null) {
 					row.put("visit_time", sf.format(record.getVisitTime()));
@@ -152,6 +160,10 @@ public class RecordController {
 			}
 			String ids = request.getParameter("ids");
 			ids = ids.substring(1);
+			List<Task> tasks = this.taskService.getTasksByVisitRecordIds(ids);
+			for (Task task : tasks) {
+				this.taskService.delete(task.getId());
+			}
 			this.visitRecordService.deleteVisitRecord(ids,
 					request.getServletContext().getRealPath("/recordImages"));
 		} catch (Exception e) {
@@ -173,7 +185,7 @@ public class RecordController {
 			List<VisitRecord> visitRecords = this.visitRecordService.queryVisitRecordsByIds(ids);
 			StringBuffer sb = new StringBuffer("");
 			for (VisitRecord record : visitRecords) {
-				sb.append(",'").append(record.getTaskId()).append("'");
+				sb.append(",").append(record.getTaskId());
 				record.setType(0);
 				this.visitRecordService.update(record);
 			}
@@ -189,7 +201,7 @@ public class RecordController {
 		try {
 			JSONObject json = new JSONObject();
 			JSONArray rows = new JSONArray();
-			VisitRecord record = this.visitRecordService.getVisitRecord(recordId);
+			VisitRecord record = this.visitRecordService.getVisitRecord(Long.parseLong(recordId));
 			if (record != null) {
 				for (int i = 0; i < 6; ++i) {
 					JSONObject jo = new JSONObject();

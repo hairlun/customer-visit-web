@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Task implements Serializable {
 	private static final long serialVersionUID = 6130970904909366643L;
-	private String id;
+	private long id;
 	private Date start;
 	private Date end;
 	private Date create;
@@ -88,11 +88,11 @@ public class Task implements Serializable {
 		this.reject = reject;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 }

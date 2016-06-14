@@ -14,7 +14,7 @@ public abstract interface CustomerGroupService {
 
 	public abstract void updateCustomerGroup(CustomerGroup paramCustomerGroup);
 
-	public abstract CustomerGroup getCustomerGroup(int paramInt);
+	public abstract CustomerGroup getCustomerGroup(long paramLong);
 
 	public abstract PagingSet<CustomerGroup> getCustomerGroups(int paramInt1, int paramInt2,
 			String paramString3, String paramString4);

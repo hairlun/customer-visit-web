@@ -37,7 +37,7 @@ public class CustomerManagerServiceImpl implements CustomerManagerService {
 		this.customerManagerDao.updateCustomerManager(manager);
 	}
 
-	public CustomerManager getCustomerManager(int id) {
+	public CustomerManager getCustomerManager(long id) {
 		return this.customerManagerDao.getCustomerManager(id);
 	}
 }

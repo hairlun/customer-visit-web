@@ -27,14 +27,14 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 								visitRecord.getCustomerManager().getId(),
 								Integer.valueOf(visitRecord.getType()), visitRecord.getVisitTime(),
 								visitRecord.getContent(), visitRecord.getCity(),
-								visitRecord.getGps(), visitRecord.getTaskId(),
+								visitRecord.getGps(), Long.valueOf(visitRecord.getTaskId()),
 								Integer.valueOf(visitRecord.getImages()),
 								Integer.valueOf(visitRecord.getResultCode()) });
 
 		if (details.size() > 0) {
 			StringBuffer sb = new StringBuffer("insert into record_detail(record_id, content) values");
 			for (RecordDetail detail : details) {
-				sb.append("('").append(visitRecord.getId()).append("', '").append(detail.getContent())
+				sb.append("(").append(visitRecord.getId()).append(", '").append(detail.getContent())
 						.append("'),");
 			}
 			this.jdbcTemplate.update(sb.substring(0, sb.length() - 1).toString());
@@ -46,9 +46,9 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 		this.jdbcTemplate.update("delete from record_detail where record_id in (" + ids + ")");
 	}
 
-	public VisitRecord getVisitRecord(String id) {
-		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on t.id = v.task_id where 1 = 1 and v.id = '"
-				+ id + "'";
+	public VisitRecord getVisitRecord(long id) {
+		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on t.id = v.task_id where 1 = 1 and v.id = "
+				+ id;
 
 		List records = this.jdbcTemplate.query(sql, new VisitRecordRowMapper());
 		if (records.size() < 1) {
@@ -81,12 +81,12 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 						new Object[] { Integer.valueOf(record.getCostTime()), record.getCity(),
 								record.getGps(), Integer.valueOf(record.getResultCode()),
 								Integer.valueOf(record.getType()), record.getLeaveTime(),
-								record.getVisitTime(), record.getId() });
+								record.getVisitTime(), Long.valueOf(record.getId()) });
 	}
 
-	public VisitRecord getVisitRecordByTaskId(String taskId) {
-		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on t.id = v.task_id where 1 = 1 and v.task_id = '"
-				+ taskId + "'";
+	public VisitRecord getVisitRecordByTaskId(long taskId) {
+		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on t.id = v.task_id where 1 = 1 and v.task_id = "
+				+ taskId;
 
 		List records = this.jdbcTemplate.query(sql, new VisitRecordRowMapper());
 		if (records.size() < 1) {
@@ -95,20 +95,20 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 		return (VisitRecord) records.get(0);
 	}
 
-	public List<RecordDetail> getDetails(String id) {
+	public List<RecordDetail> getDetails(long id) {
 		return this.jdbcTemplate
-				.query("select d.id, d.content from record_detail d left join visit_record r on d.record_id = r.id left join task t on t.id = r.task_id where t.id = '"
-						+ id + "'", new RowMapper<RecordDetail>() {
+				.query("select d.id, d.content from record_detail d left join visit_record r on d.record_id = r.id left join task t on t.id = r.task_id where t.id = "
+						+ id, new RowMapper<RecordDetail>() {
 					public RecordDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
 						RecordDetail detail = new RecordDetail();
-						detail.setId(rs.getString("d.id"));
+						detail.setId(rs.getLong("d.id"));
 						detail.setContent(rs.getString("d.content"));
 						return detail;
 					}
 				});
 	}
 
-	public void submit(String ids, String serviceId) {
+	public void submit(String ids, long serviceId) {
 		this.jdbcTemplate.update("update record_detail set complete = 1 where id in (" + ids + ")");
 	}
 
@@ -126,12 +126,12 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 			manager.setId(Long.valueOf(rs.getLong("v.customer_manager")));
 			manager.setName(rs.getString("mname"));
 			manager.setUsername(rs.getString("musername"));
-			record.setId(rs.getString("v.id"));
+			record.setId(rs.getLong("v.id"));
 			record.setCustomerManager(manager);
 			record.setImages(rs.getInt("v.images"));
 			record.setCostTime(rs.getInt("v.cost"));
 			record.setResultCode(rs.getInt("v.result_code"));
-			record.setTaskId(rs.getString("v.task_id"));
+			record.setTaskId(rs.getLong("v.task_id"));
 			record.setCity(rs.getString("v.city"));
 			record.setGps(rs.getString("v.gps"));
 			record.setType(rs.getInt("v.type"));

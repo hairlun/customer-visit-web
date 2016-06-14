@@ -56,7 +56,8 @@ Ext.haode.Control.prototype = {
 						}
 						Ext.getCmp('form').getForm().submit({
 							 waitTitle : '提示',
-						     waitMsg : '正在提交数据请稍后...',  
+						     waitMsg : '正在提交数据请稍后...',
+						     timeout : 1000000,
 						     url : 'task.do?action=normal',  
 						     method : 'post',
 						     success : function(form, action) {

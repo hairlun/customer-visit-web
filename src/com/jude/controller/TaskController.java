@@ -71,20 +71,18 @@ public class TaskController {
 			if (start.after(end)) {
 				return ExtJS.ok("起始时间不能大于任务完成时间！");
 			}
-			List tasks = new ArrayList();
-			int idx = 0;
+			List<Task> tasks = new ArrayList<Task>();
 			for (Customer customer : this.customerService.getCustomers(0, 1000000).getList()) {
 				if (customer.getCustomerManager() == null) {
 					continue;
 				}
-				idx++;
 				Task task = new Task();
 				task.setContent(request.getParameter("content"));
 				task.setCustomer(customer);
 				task.setManager(customer.getCustomerManager());
 				task.setStart(start);
 				task.setEnd(end);
-				task.setId(IdUtil.getId() + idx);
+				task.setId(IdUtil.getId());
 				tasks.add(task);
 			}
 			if (tasks.size() < 1) {
@@ -100,22 +98,7 @@ public class TaskController {
 					cs.add(detail);
 				}
 			}
-			List subTasks = new ArrayList();
-			subTasks.add(tasks.get(0));
-			for (int i = 0; i < tasks.size();) {
-				++i;
-				if (i % 100 != 0) {
-					if (i < tasks.size())
-						subTasks.add(tasks.get(i));
-				} else {
-					this.taskService.addTask(subTasks, cs);
-					subTasks.clear();
-				}
-				if (tasks.size() == i)
-					;
-				this.taskService.addTask(subTasks, cs);
-			}
-
+			this.taskService.addTask(tasks, cs);
 			return ExtJS.ok("发放成功!");
 		} catch (Exception e) {
 			log.error("error", e);
@@ -200,19 +183,17 @@ public class TaskController {
 
 			List<Customer> list = this.customerService.getCustomersByGroupIds(gids);
 			List tasks = new ArrayList();
-			int idx = 0;
 			for (Customer customer : list) {
 				if (customer.getCustomerManager() == null) {
 					continue;
 				}
-				idx++;
 				Task task = new Task();
 				task.setContent(request.getParameter("content"));
 				task.setCustomer(customer);
 				task.setManager(customer.getCustomerManager());
 				task.setStart(start);
 				task.setEnd(end);
-				task.setId(IdUtil.getId() + idx);
+				task.setId(IdUtil.getId());
 				tasks.add(task);
 			}
 
@@ -257,19 +238,17 @@ public class TaskController {
 
 			List<Customer> list = this.customerService.getCustomersByIds(cids);
 			List tasks = new ArrayList();
-			int idx = 0;
 			for (Customer customer : list) {
 				if (customer.getCustomerManager() == null) {
 					continue;
 				}
-				idx++;
 				Task task = new Task();
 				task.setContent(request.getParameter("content"));
 				task.setCustomer(customer);
 				task.setManager(customer.getCustomerManager());
 				task.setStart(start);
 				task.setEnd(end);
-				task.setId(IdUtil.getId() + idx);
+				task.setId(IdUtil.getId());
 				tasks.add(task);
 			}
 
@@ -326,7 +305,7 @@ public class TaskController {
 				task.setManager(manager);
 				task.setStart(start);
 				task.setEnd(end);
-				task.setId(IdUtil.getId() + idx);
+				task.setId(IdUtil.getId());
 				tasks.add(task);
 			}
 

@@ -1,14 +1,14 @@
 package com.jude.entity;
 
 public class RecordDetail {
-	private String id;
+	private long id;
 	private String content;
 
-	public String getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

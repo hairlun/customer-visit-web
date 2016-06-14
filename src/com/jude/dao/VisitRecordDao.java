@@ -10,7 +10,7 @@ public abstract interface VisitRecordDao {
 
 	public abstract void deleteVisitRecord(String paramString);
 
-	public abstract VisitRecord getVisitRecord(String paramString);
+	public abstract VisitRecord getVisitRecord(long paramLong);
 
 	public abstract PagingSet<VisitRecord> queryVisitRecords(int paramInt1, int paramInt2,
 			String paramString1, String paramString2, String paramString3);
@@ -19,9 +19,9 @@ public abstract interface VisitRecordDao {
 
 	public abstract void update(VisitRecord paramVisitRecord);
 
-	public abstract VisitRecord getVisitRecordByTaskId(String paramString);
+	public abstract VisitRecord getVisitRecordByTaskId(long paramLong);
 
-	public abstract List<RecordDetail> getDetails(String paramString);
+	public abstract List<RecordDetail> getDetails(long paramLong);
 
-	public abstract void submit(String paramString1, String paramString2);
+	public abstract void submit(String paramString1, long paramLong1);
 }
