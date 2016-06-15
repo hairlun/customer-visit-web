@@ -323,7 +323,7 @@ public class MobileController {
 			String ids = request.getParameter("ids");
 			long serviceId = Long.parseLong(request.getParameter("serviceId"));
 
-			this.recordService.submit(ids.substring(1), serviceId);
+			this.recordService.submit(ids, serviceId);
 
 			json.put("retcode", "000000");
 			json.put("retinfo", "success");
