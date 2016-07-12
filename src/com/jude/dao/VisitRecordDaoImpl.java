@@ -59,8 +59,10 @@ public class VisitRecordDaoImpl implements VisitRecordDao {
 
 	public PagingSet<VisitRecord> queryVisitRecords(int start, int limit, String condition,
 			String sort, String dir) {
-		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on v.task_id = t.id where 1 = 1 "
-				+ condition;
+		String sql = "select v.id, v.customer, v.customer_manager, v.type, v.visit_time, v.leave_time, v.content, v.city, v.gps, v.task_id, v.images, v.result_code, v.cost, c.name as cname, c.number as cnumber, c.sell_number as csell_number, c.gps as cgps, m.name as mname, m.username as musername, t.reject from ((visit_record v left join customer c on  v.customer = c.id) left join customer_manager m on v.customer_manager = m.id) left join task t on v.task_id = t.id where 1 = 1 ";
+		if (condition != null && !condition.equals("")) {
+			sql = sql + condition;
+		}
 		if (sort != null && !sort.equals("") && dir != null && !dir.equals("")) {
 			sql += " order by " + sort + " " + dir;
 		}

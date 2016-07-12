@@ -8,16 +8,21 @@ import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
 import com.jude.service.TaskService;
 import com.jude.service.VisitRecordService;
+import com.jude.util.ExcelColumn;
+import com.jude.util.ExcelExporter;
 import com.jude.util.ExtJS;
 import com.jude.util.HttpUtils;
 import com.jude.util.PagingSet;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -239,5 +244,18 @@ public class RecordController {
 		}
 		InputStream is = new FileInputStream(file);
 		IOUtils.copy(is, response.getOutputStream());
+	}
+	
+	public String zip(Map<String, Object> param, String name) {
+		name = "zipfile";
+		List<VisitRecord> list = this.visitRecordService.queryVisitRecords(0, 100000, null, null, null).getList();
+
+		for (VisitRecord record : list) {
+			
+		}
+		ExcelExporter builder = null;
+		File zip = null;
+		zip = new File(System.getProperty("java.io.tmpdir"), name + ".zip");
+		return ((builder != null) && (zip.length() > 0L)) ? zip.getAbsolutePath() : "error";
 	}
 }

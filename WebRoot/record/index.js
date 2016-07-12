@@ -254,6 +254,13 @@ Ext.haode.Control.prototype = {
 					handler : this.images,
 					scope : this
 				}, {
+					text : '打包下载图片',
+					iconCls : 'imge',
+					width : 45,
+					xtype : 'button',
+					handler : this.zip,
+					scope : this
+				}, {
 					text : '驳回',
 					iconCls : 'del',
 					width :45,
@@ -395,6 +402,27 @@ Ext.haode.Control.prototype = {
 			})]
 		});
 		win.show(Ext.getBody());
+	},
+	
+	zip : function() {
+		Ext.MessageBox.wait('正在打包','请稍后...');
+		Ext.haode.ajax({
+			url : 'record.do?action=zip',
+			method : 'post',
+			success : function(json, opts) {
+				Ext.MessageBox.hide();
+				new Ext.Window({
+					width : 250,
+					height : 80,
+					title : '打包图片下载',
+					html : "<a href='record.do?action=downloadZip&res=" + json.myHashMap.msg + "'>请点击此处下载...</a>"
+				}).show();
+			},
+			failure : function(json, opt) {
+				Ext.MessageBox.hide();
+				alert(json.myHashMap.msg);
+			}
+		});
 	},
 	
 	images : function() {
