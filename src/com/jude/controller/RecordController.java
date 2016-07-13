@@ -6,6 +6,7 @@ import com.jude.entity.Task;
 import com.jude.entity.VisitRecord;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
+import com.jude.service.CustomerManagerService;
 import com.jude.service.TaskService;
 import com.jude.service.VisitRecordService;
 import com.jude.util.ExcelColumn;
@@ -32,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -48,6 +51,9 @@ public class RecordController {
 	
 	@Autowired
 	private TaskService taskService;
+	
+	@Autowired
+	private CustomerManagerService customerManagerService;
 
 	@RequestMapping(params = { "action=forwardIndex" })
 	public String forwardIndex() {
@@ -246,16 +252,61 @@ public class RecordController {
 		IOUtils.copy(is, response.getOutputStream());
 	}
 	
-	public String zip(Map<String, Object> param, String name) {
-		name = "zipfile";
-		List<VisitRecord> list = this.visitRecordService.queryVisitRecords(0, 100000, null, null, null).getList();
-
-		for (VisitRecord record : list) {
-			
+	@RequestMapping(params = { "action=zip" })
+	@ResponseBody
+	public JSONObject zipPhotos(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if (!LoginInfo.isAdmin(request)) {
+				return ExtJS.fail("非admin用户不能执行此操作！");
+			}
+			String path = request.getServletContext().getRealPath("/recordImages") + File.separator;
+			String res = zip(null, null, path);
+			if ("error".equals(res)) {
+				return ExtJS.fail("打包失败!");
+			}
+			return ExtJS.ok(res);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		ExcelExporter builder = null;
-		File zip = null;
-		zip = new File(System.getProperty("java.io.tmpdir"), name + ".zip");
-		return ((builder != null) && (zip.length() > 0L)) ? zip.getAbsolutePath() : "error";
+		return ExtJS.fail("打包失败！");
+	}
+	
+	public String zip(Map<String, Object> param, String name, String path) {
+		byte[] buf = new byte[1024];
+		name = "zipfile";
+		List<CustomerManager> customerManagers = this.customerManagerService.getCustomerManagers(0, 10000, null, null).getList();
+		File zipFile = new File(System.getProperty("java.io.tmpdir"), name + ".zip");
+		try {
+			ZipOutputStream zos = new ZipOutputStream(zipFile);
+			zos.setEncoding("GBK");
+			for (CustomerManager customerManager : customerManagers) {
+				String outPath = customerManager.getName() + "/";
+				zos.putNextEntry(new ZipEntry(outPath));
+				List<VisitRecord> list = this.visitRecordService.queryVisitRecords(0, 100000, " and m.id = " + customerManager.getId() + " ", null, null).getList();
+				for (VisitRecord visitRecord : list) {
+					for (int i = 0; i < 6; i++) {
+						File file = new File(path + visitRecord.getId() + "_" + i + ".jpg");
+						if (file.exists()) {
+							zos.putNextEntry(new ZipEntry(outPath + visitRecord.getId() + "_" + i + ".jpg"));
+							FileInputStream in = new FileInputStream(file);
+							int len;
+							while ((len = in.read(buf)) > 0) {
+								zos.write(buf, 0, len);
+							}
+							in.close();
+							zos.closeEntry();
+						} else {
+							break;
+						}
+					}
+				}
+			}
+			zos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return zipFile.length() > 0L ? zipFile.getAbsolutePath() : "error";
 	}
 }
