@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -308,5 +309,29 @@ public class RecordController {
 		}
 
 		return zipFile.length() > 0L ? zipFile.getAbsolutePath() : "error";
+	}
+
+	@RequestMapping(params = { "action=downloadZip" })
+	public void downloadZip(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if (!LoginInfo.isAdmin(request)) {
+				return;
+			}
+			String res = request.getParameter("res");
+			if (res == null || res.equals("")) {
+				return;
+			}
+
+			response.setHeader("Content-Disposition", "attachment; filename=photos.zip");
+			response.setContentType("application/octet-stream; charset=utf-8");
+			InputStream is = new FileInputStream(res);
+			OutputStream os = response.getOutputStream();
+			IOUtils.copy(is, os);
+			os.flush();
+			IOUtils.closeQuietly(is);
+			IOUtils.closeQuietly(os);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
