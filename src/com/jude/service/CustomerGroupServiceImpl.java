@@ -12,8 +12,8 @@ public class CustomerGroupServiceImpl implements CustomerGroupService {
 	@Autowired
 	private CustomerGroupDao customerGroupDao;
 
-	public void addCustomerGroup(CustomerGroup cutomerGroup) {
-		this.customerGroupDao.addCustomerGroup(cutomerGroup);
+	public void addCustomerGroup(CustomerGroup customerGroup) {
+		this.customerGroupDao.addCustomerGroup(customerGroup);
 	}
 
 	public void deleteCustomerGroups(String ids) {

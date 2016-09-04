@@ -1,5 +1,7 @@
 package com.jude.dao;
 
+import java.util.List;
+
 import com.jude.entity.CustomerManager;
 import com.jude.util.PagingSet;
 
@@ -18,4 +20,6 @@ public abstract interface CustomerManagerDao {
 
 	public abstract PagingSet<CustomerManager> getCustomerMangers(int paramInt1, int paramInt2,
 			String paramString3, String paramString4);
+	
+	public abstract List<CustomerManager> getCustomerManagersByDepartmentIds(String paramString);
 }

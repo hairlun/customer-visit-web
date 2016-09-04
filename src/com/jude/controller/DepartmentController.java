@@ -1,10 +1,10 @@
 package com.jude.controller;
 
 import com.jude.entity.Customer;
-import com.jude.entity.CustomerGroup;
+import com.jude.entity.Department;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
-import com.jude.service.CustomerGroupService;
+import com.jude.service.DepartmentService;
 import com.jude.util.ExtJS;
 import com.jude.util.HttpUtils;
 import com.jude.util.PagingSet;
@@ -25,16 +25,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({ "customerGroup.do" })
-public class CustomerGroupController {
-	public static final Logger log = LoggerFactory.getLogger(CustomerGroupController.class);
+@RequestMapping({ "/department.do" })
+public class DepartmentController {
+	public static final Logger log = LoggerFactory.getLogger(DepartmentController.class);
 
 	@Autowired
-	private CustomerGroupService customerGroupService;
+	private DepartmentService departmentService;
 
 	@RequestMapping(params = { "action=forwardIndex" })
 	public String forwardIndex() {
-		return "customerGroup/index.jsp";
+		return "department/index.jsp";
 	}
 
 	@RequestMapping(params = { "action=queryAll" })
@@ -46,23 +46,23 @@ public class CustomerGroupController {
 			int all = NumberUtils.toInt((String) param.get("all"), 1);
 			String sort = (String) param.get("sort");
 			String dir = (String) param.get("dir");
-			PagingSet<CustomerGroup> set = this.customerGroupService.getCustomerGroups(start, limit,
+			PagingSet<Department> set = this.departmentService.getDepartments(start, limit,
 					sort, dir);
 
 			JSONArray rows = new JSONArray();
 			JSONObject main = new JSONObject();
-			List<CustomerGroup> groupList = set.getList();
+			List<Department> departmentList = set.getList();
 			JSONObject row;
 			if (all == 1) {
 				row = new JSONObject();
 				row.put("id", Long.valueOf(-1L));
-				row.put("name", "全部客户");
+				row.put("name", "全部部门");
 				rows.put(row);
 			}
-			for (CustomerGroup group : groupList) {
+			for (Department department : departmentList) {
 				row = new JSONObject();
-				row.put("id", group.getId());
-				row.put("name", group.getName());
+				row.put("id", department.getId());
+				row.put("name", department.getName());
 				rows.put(row);
 			}
 			main.put("rows", rows);
@@ -78,31 +78,31 @@ public class CustomerGroupController {
 		}
 	}
 
-	@RequestMapping(params = { "action=addGroup" })
+	@RequestMapping(params = { "action=addDepartment" })
 	@ResponseBody
-	public JSONObject addCustomerGroup(HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject addDepartment(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (!LoginInfo.isAdmin(request)) {
 				return ExtJS.fail("非admin用户不能执行此操作！");
 			}
 			String name = request.getParameter("name");
-			if (this.customerGroupService.nameExist(name)) {
-				return ExtJS.fail("分组已存在，请重新输入!");
+			if (this.departmentService.nameExist(name)) {
+				return ExtJS.fail("部门已存在，请重新输入!");
 			}
 
-			CustomerGroup group = new CustomerGroup();
-			group.setName(name);
-			this.customerGroupService.addCustomerGroup(group);
-			return ExtJS.ok("新增客户分组成功！");
+			Department department = new Department();
+			department.setName(name);
+			this.departmentService.addDepartment(department);
+			return ExtJS.ok("新增部门成功！");
 		} catch (Exception e) {
-			log.error("add customer ex", e);
+			log.error("add department ex", e);
 		}
-		return ExtJS.fail("新增客户分组失败，请刷新页面重试！");
+		return ExtJS.fail("新增部门失败，请刷新页面重试！");
 	}
 
-	@RequestMapping(params = { "action=editGroup" })
+	@RequestMapping(params = { "action=editDepartment" })
 	@ResponseBody
-	public JSONObject editCustomerGroup(HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject editDepartment(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (!LoginInfo.isAdmin(request)) {
 				return ExtJS.fail("非admin用户不能执行此操作！");
@@ -111,49 +111,49 @@ public class CustomerGroupController {
 			String name = request.getParameter("name");
 			String oname = request.getParameter("oname");
 			if ((!name.equals(oname))
-					&& (this.customerGroupService.nameExist(name))) {
-				return ExtJS.fail("分组已存在，请重新输入!");
+					&& (this.departmentService.nameExist(name))) {
+				return ExtJS.fail("部门已存在，请重新输入!");
 			}
-			CustomerGroup group = this.customerGroupService.getCustomerGroup(id);
-			if (group == null) {
-				return ExtJS.fail("编辑客户分组失败，请刷新页面重试！");
+			Department department = this.departmentService.getDepartment(id);
+			if (department == null) {
+				return ExtJS.fail("编辑部门失败，请刷新页面重试！");
 			}
-			group.setName(name);
-			this.customerGroupService.updateCustomerGroup(group);
+			department.setName(name);
+			this.departmentService.updateDepartment(department);
 			return ExtJS.ok("修改成功！");
 		} catch (Exception e) {
 		}
-		return ExtJS.fail("编辑客户分组失败，请刷新页面重试！");
+		return ExtJS.fail("编辑部门失败，请刷新页面重试！");
 	}
 
-	@RequestMapping(params = { "action=delGroups" })
+	@RequestMapping(params = { "action=delDepartments" })
 	@ResponseBody
-	public JSONObject delCustomerGroups(HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject delDepartments(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (!LoginInfo.isAdmin(request)) {
 				return ExtJS.fail("非admin用户不能执行此操作！");
 			}
 			String ids = request.getParameter("ids");
 			ids = ids.substring(1);
-			this.customerGroupService.deleteCustomerGroups(ids);
+			this.departmentService.deleteDepartments(ids);
 		} catch (Exception e) {
-			return ExtJS.fail("删除客户分组失败，请刷新页面后重试！");
+			return ExtJS.fail("删除部门失败，请刷新页面后重试！");
 		}
-		return ExtJS.ok("删除客户分组成功！");
+		return ExtJS.ok("删除部门成功！");
 	}
 	
-	@RequestMapping(params = { "action=joinGroup" })
+	@RequestMapping(params = { "action=joinDepartment" })
 	@ResponseBody
-	public JSONObject joinGroup(String cids, long gid, HttpServletRequest request,
+	public JSONObject joinDepartment(String mids, long did, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			if (!LoginInfo.isAdmin(request)) {
 				return ExtJS.fail("非admin用户不能执行此操作！");
 			}
-			String[] ids = cids.split(",");
+			String[] ids = mids.split(",");
 			for (int i = 1; i < ids.length; ++i) {
-				long customerId = Long.parseLong(ids[i]);
-				this.customerGroupService.joinGroup(customerId, gid);
+				long managerId = Long.parseLong(ids[i]);
+				this.departmentService.joinDepartment(managerId, did);
 			}
 		} catch (Exception e) {
 			return ExtJS.fail("移入失败，请刷新页面后重试！");
@@ -161,18 +161,18 @@ public class CustomerGroupController {
 		return ExtJS.ok("移入成功！");
 	}
 	
-	@RequestMapping(params = { "action=exitGroup" })
+	@RequestMapping(params = { "action=exitDepartment" })
 	@ResponseBody
-	public JSONObject exitGroup(String cids, long gid, HttpServletRequest request,
+	public JSONObject exitDepartment(String mids, long did, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			if (!LoginInfo.isAdmin(request)) {
 				return ExtJS.fail("非admin用户不能执行此操作！");
 			}
-			String[] ids = cids.split(",");
+			String[] ids = mids.split(",");
 			for (int i = 1; i < ids.length; ++i) {
-				long customerId = Long.parseLong(ids[i]);
-				this.customerGroupService.exitGroup(customerId, gid);
+				long managerId = Long.parseLong(ids[i]);
+				this.departmentService.exitDepartment(managerId, did);
 			}
 		} catch (Exception e) {
 			return ExtJS.fail("移出失败，请刷新页面后重试！");

@@ -1,11 +1,15 @@
 package com.jude.dao;
 
+import com.jude.dao.CustomerDaoImpl.CustomerRowMapper;
+import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
 import com.jude.util.PagingHelper;
 import com.jude.util.PagingSet;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,6 +67,12 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 			return (CustomerManager) list.get(0);
 		}
 		return null;
+	}
+
+	public List<CustomerManager> getCustomerManagersByDepartmentIds(String ids) {
+		String sql = "select distinct m.id, m.name, m.username, m.password from customer_manager m left join department_manager_relation dmr on m.id = dmr.manager_id where dmr.department_id in ("
+				+ ids + ")";
+		return this.jdbcTemplate.query(sql, new CustomerManagerRowMapper());
 	}
 
 	public void updateCustomerManager(CustomerManager manager) {

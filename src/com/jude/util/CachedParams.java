@@ -43,6 +43,12 @@ public class CachedParams {
 		jo2.put("text", "客户经理管理");
 		jo2.put("src", "customerManager.do?action=forwardIndex");
 		menus.put(jo2);
+		JSONObject jo9 = new JSONObject();
+		jo9.put("id", "9");
+		jo9.put("leaf", true);
+		jo9.put("text", "部门管理");
+		jo9.put("src", "department.do?action=forwardIndex");
+		menus.put(jo9);
 		JSONObject jo3 = new JSONObject();
 		jo3.put("id", "3");
 		jo3.put("leaf", true);
