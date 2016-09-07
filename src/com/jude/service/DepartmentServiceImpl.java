@@ -21,8 +21,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		this.departmentDao.deleteDepartments(ids);
 	}
 
-	public Department getDepartment(String username) {
-		return this.departmentDao.getDepartment(username);
+	public Department getDepartment(String name) {
+		return this.departmentDao.getDepartment(name);
 	}
 
 	public PagingSet<Department> getDepartments(int start, int pageSize,
@@ -30,8 +30,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return this.departmentDao.getDepartments(start, pageSize, sort, dir);
 	}
 
-	public boolean nameExist(String username) {
-		return this.departmentDao.nameExist(username);
+	public boolean nameExist(String name) {
+		return this.departmentDao.nameExist(name);
 	}
 
 	public void updateDepartment(Department manager) {

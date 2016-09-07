@@ -61,6 +61,18 @@ public class CachedParams {
 		jo4.put("text", "客户拜访管理");
 		jo4.put("src", "record.do?action=forwardIndex");
 		menus.put(jo4);
+		JSONObject jo10 = new JSONObject();
+		jo10.put("id", "10");
+		jo10.put("leaf", true);
+		jo10.put("text", "交互事项管理");
+		jo10.put("src", "interactiveItem.do?action=forwardIndex");
+		menus.put(jo10);
+		JSONObject jo11 = new JSONObject();
+		jo11.put("id", "11");
+		jo11.put("leaf", true);
+		jo11.put("text", "合力专销");
+		jo11.put("src", "workflow.do?action=forwardIndex");
+		menus.put(jo11);
 		JSONObject jo5 = new JSONObject();
 		jo5.put("id", "5");
 		jo5.put("leaf", false);
