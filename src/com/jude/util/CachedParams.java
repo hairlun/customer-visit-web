@@ -24,6 +24,26 @@ public class CachedParams {
 		jo7.put("src", "user.do?action=forwardIndex");
 		systemChidren.put(jo6);
 		systemChidren.put(jo7);
+		
+		JSONArray workflowChildren = new JSONArray();
+		JSONObject jo12 = new JSONObject();
+		jo12.put("id", "12");
+		jo12.put("leaf", true);
+		jo12.put("text", "发起任务");
+		jo12.put("src", "workflow.do?action=newWorkflow");
+		workflowChildren.put(jo12);
+		JSONObject jo13 = new JSONObject();
+		jo13.put("id", "13");
+		jo13.put("leaf", true);
+		jo13.put("text", "经办任务");
+		jo13.put("src", "workflow.do?action=dealWorkflow");
+		workflowChildren.put(jo13);
+		JSONObject jo14 = new JSONObject();
+		jo14.put("id", "14");
+		jo14.put("leaf", true);
+		jo14.put("text", "任务统计");
+		jo14.put("src", "workflow.do?action=viewWorkflow");
+		workflowChildren.put(jo14);
 
 		JSONObject jo1 = new JSONObject();
 		jo1.put("id", "1");
@@ -69,9 +89,9 @@ public class CachedParams {
 		menus.put(jo10);
 		JSONObject jo11 = new JSONObject();
 		jo11.put("id", "11");
-		jo11.put("leaf", true);
+		jo11.put("leaf", false);
 		jo11.put("text", "合力专销");
-		jo11.put("src", "workflow.do?action=forwardIndex");
+		jo11.put("children", workflowChildren);
 		menus.put(jo11);
 		JSONObject jo5 = new JSONObject();
 		jo5.put("id", "5");

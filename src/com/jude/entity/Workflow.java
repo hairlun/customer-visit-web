@@ -11,7 +11,7 @@ public class Workflow implements Serializable {
 	 */
 	private static final long serialVersionUID = -4204559602557079177L;
 
-	private long id;
+	private Long id;
 
 	private Customer customer;
 
@@ -35,11 +35,11 @@ public class Workflow implements Serializable {
 
 	private List<InteractiveItem> interactiveItems;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
