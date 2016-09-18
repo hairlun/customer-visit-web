@@ -172,7 +172,7 @@ Ext.haode.Control.prototype = {
 			}, {
 				header : '处置方姓名（部门）',
 				width : 160,
-				dataIndex : 'customer_manager',
+				dataIndex : 'handler',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
@@ -219,21 +219,21 @@ Ext.haode.Control.prototype = {
 					iconCls : 'del',
 					width : 45,
 					xtype : 'button',
-					handler : this.delRecords,
+					handler : this.delWorkflows,
 					scope : this
 				}, {
 					text : '查看详情',
 					iconCls : 'imge',
 					width : 45,
 					xtype : 'button',
-					handler : this.images,
+					handler : this.details,
 					scope : this
 				}, {
-					text : '批量导出excel',
+					text : '导出excel',
 					iconCls : 'imge',
 					width : 45,
 					xtype : 'button',
-					handler : this.zip,
+					handler : this.exportExcel,
 					scope : this
 				}],
 				store : this.store,
@@ -252,7 +252,7 @@ Ext.haode.Control.prototype = {
 		return panel;
 	},
 	
-	delRecords : function() {
+	delWorkflows : function() {
 		var sm = Ext.getCmp('grid').getSelectionModel();
 		var records = sm.getSelections();
 		if (records.length < 1) {
@@ -288,20 +288,24 @@ Ext.haode.Control.prototype = {
 		});
 	},
 	
-	reject : function() {
+	details : function() {
 		var sm = Ext.getCmp('grid').getSelectionModel();
 		var records = sm.getSelections();
-		if (records.length < 1) {
-			alert('请选择要驳回的记录');
+		if (records.length != 1) {
+			alert('请选择一个要查看的记录！');
 			return;
 		}
-		var ids = "";
-		for (var i = 0; i < records.length; i++) {
-			ids += "," + records[i].get('id');
-		}
-		if (ids.length < 2) {
-			return;
-		}
+		var store = new Ext.data.JsonStore({
+			autoLoad: true,
+		    url : 'workflow.do?action=details',
+		    baseParams : {
+		    	workflowId : records[0].get('id')
+		    },
+		    root : 'rows',
+		    fields : [
+		        'title', 'url'
+		    ]
+		});
 		var win = new Ext.Window({
 			title : '驳回',
 			id : 'editWin',
