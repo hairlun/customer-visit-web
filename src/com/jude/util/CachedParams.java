@@ -84,7 +84,7 @@ public class CachedParams {
 		JSONObject jo10 = new JSONObject();
 		jo10.put("id", "10");
 		jo10.put("leaf", true);
-		jo10.put("text", "交互事项管理");
+		jo10.put("text", "互动事项管理");
 		jo10.put("src", "interactiveItem.do?action=forwardIndex");
 		menus.put(jo10);
 		JSONObject jo11 = new JSONObject();

@@ -117,7 +117,7 @@ public class WorkflowController {
                 row.put("description", workflow.getDescription());
                 row.put("remark", workflow.getRemark());
                 row.put("response_network", workflow.getResponseNetwork());
-                if (workflow.getCustomer() != null) {
+                if (workflow.getCustomer().getName() != null) {
                     row.put("cid", workflow.getCustomer().getId());
                     row.put("cname", workflow.getCustomer().getName());
                     row.put("cnumber", workflow.getCustomer().getNumber());
@@ -131,7 +131,7 @@ public class WorkflowController {
                             .getBackupNumber());
                     row.put("caddress", workflow.getCustomer().getAddress());
                     row.put("cgps", workflow.getCustomer().getGps());
-                    if (workflow.getCustomer().getCustomerManager() != null) {
+                    if (workflow.getCustomer().getCustomerManager().getName() != null) {
                         row.put("cmid", workflow.getCustomer()
                                 .getCustomerManager().getId());
                         row.put("cmname", workflow.getCustomer()
@@ -157,12 +157,12 @@ public class WorkflowController {
                     row.put("cmname", "");
                     row.put("cmusername", "");
                 }
-                if (workflow.getProblemFinder() != null) {
+                if (workflow.getProblemFinder().getName() != null) {
                     row.put("pfid", workflow.getProblemFinder().getId());
                     row.put("pfname", workflow.getProblemFinder().getName());
                     row.put("pfusername", workflow.getProblemFinder()
                             .getUsername());
-                    if (workflow.getProblemFinder().getDepartment() != null) {
+                    if (workflow.getProblemFinder().getDepartment().getName() != null) {
                         row.put("pfdid", workflow.getProblemFinder()
                                 .getDepartment().getId());
                         row.put("pfdname", workflow.getProblemFinder()
@@ -186,11 +186,11 @@ public class WorkflowController {
                     row.put("pfdname", "");
                     row.put("problem_finder", "");
                 }
-                if (workflow.getHandler() != null) {
+                if (workflow.getHandler().getName() != null) {
                     row.put("hid", workflow.getHandler().getId());
                     row.put("hname", workflow.getHandler().getName());
                     row.put("husername", workflow.getHandler().getUsername());
-                    if (workflow.getHandler().getDepartment() != null) {
+                    if (workflow.getHandler().getDepartment().getName() != null) {
                         row.put("hdid", workflow.getHandler().getDepartment()
                                 .getId());
                         row.put("hdname", workflow.getHandler().getDepartment()
