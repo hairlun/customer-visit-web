@@ -61,7 +61,7 @@ Ext.haode.Control.prototype = {
                         defaults: {anchor: '55%'},
                         style: 'margin-left: 100px;padding-left: 5px;',
                         items:[
-                            {xtype: 'textfield',fieldLabel: '客户名称',name: 'customer', id : 'customer'},
+                            {xtype: 'textfield',fieldLabel: '被处置对象',name: 'customer', id : 'customer'},
                             {xtype: 'datefield',fieldLabel: '开始时间',name: 'startTime', editable : false, id : 'startTime'},
                         ]
                     }, {
@@ -73,7 +73,7 @@ Ext.haode.Control.prototype = {
                         defaults: {anchor: '60%'},
                         style: 'margin-left: 5px;padding-left: 5px;',
                         items:[
-                            {xtype: 'textfield',fieldLabel: '客户经理名称',name: 'manager', id : 'manager'},
+                            {xtype: 'textfield',fieldLabel: '反馈方',name: 'problemFinder', id : 'problemFinder'},
                             {xtype: 'datefield',fieldLabel: '结束时间',name: 'endTime', editable : false, id : 'endTime'}
                         ]
                     }]
@@ -86,7 +86,7 @@ Ext.haode.Control.prototype = {
 							params : {
 								start : 0,
 								limit : 20,
-								manager : Ext.getCmp('manager').getValue(),
+								problemFinder : Ext.getCmp('problemFinder').getValue(),
 								customer : Ext.getCmp('customer').getValue(),
 								startTime : Ext.getCmp('startTime').getValue(),
 								endTime : Ext.getCmp('endTime').getValue()
@@ -96,7 +96,7 @@ Ext.haode.Control.prototype = {
 				}, {
 					text : '重置',
 					handler : function() {
-						Ext.getCmp('manager').setValue('');
+						Ext.getCmp('problemFinder').setValue('');
 						Ext.getCmp('customer').setValue('');
 						Ext.getCmp('startTime').setValue('');
 						Ext.getCmp('endTime').setValue('');
@@ -177,6 +177,13 @@ Ext.haode.Control.prototype = {
 				remoteSort : true,
 				align : 'center'
 			}, {
+				header : '被处置对象签名',
+				width : 160,
+				dataIndex : 'cname',
+				sortable : true,
+				remoteSort : true,
+				align : 'center'
+			}, {
 				header : '备注',
 				width : 200,
 				dataIndex : 'remark',
@@ -192,7 +199,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'address', 'receive_time', 'handle_time', 'solved_time', 'response_network', 'interactive_items', 'description', 'reply', 'problem_finder', 'customer_manager', 'remark']
+					fields : ['id', 'address', 'receive_time', 'handle_time', 'solved_time', 'response_network', 'interactive_items', 'description', 'reply', 'problem_finder', 'handler', 'cname', 'remark']
 				}),
 				remoteSort : true
 			});

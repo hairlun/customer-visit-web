@@ -19,7 +19,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		this.workflowDao.addWorkflow(workflow);
 	}
 
-	public void deleteWorkflow(String ids) {
+	public void deleteWorkflows(String ids) {
 		this.workflowDao.deleteWorkflow(ids);
 	}
 

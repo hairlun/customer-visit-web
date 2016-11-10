@@ -81,25 +81,29 @@ public class WorkflowController {
                 where.append(" and c.name like '%").append(
                         (String) param.get("customer") + "%'");
             }
-            if (StringUtils.hasLength((String) param.get("address"))) {
-                where.append(" and w.address like '%").append(
-                        (String) param.get("address") + "%'");
-            }
-            if (StringUtils.hasLength((String) param.get("sellNumber"))) {
-                where.append(" and c.sell_number like '%").append(
-                        (String) param.get("sellNumber") + "%'");
-            }
-            if (StringUtils.hasLength((String) param.get("receiveTime"))) {
-                try {
-                    String ss = (String) param.get("receiveTime");
-                    where.append(" and receive_time > '")
-                            .append(ss.substring(0, 10)).append("'");
-                } catch (Exception e) {
-                }
-            }
             if (StringUtils.hasLength((String) param.get("problemFinder"))) {
                 where.append(" and pf.name like '%").append(
                         (String) param.get("problemFinder") + "%'");
+            }
+            if (StringUtils.hasLength((String) param.get("startTime"))) {
+                try {
+                    String ss = (String) param.get("startTime");
+                    where.append(" and ( receive_time >= '")
+                            .append(ss.substring(0, 10)).append("' or handle_time >= '")
+                            .append(ss.substring(0, 10)).append("' or solved_time >= '")
+                            .append(ss.substring(0, 10)).append("' )");
+                } catch (Exception e) {
+                }
+            }
+            if (StringUtils.hasLength((String) param.get("endTime"))) {
+                try {
+                    String ss = (String) param.get("endTime");
+                    where.append(" and ( receive_time <= '")
+                            .append(ss.substring(0, 10)).append("' or handle_time <= '")
+                            .append(ss.substring(0, 10)).append("' or solved_time <= '")
+                            .append(ss.substring(0, 10)).append("' )");
+                } catch (Exception e) {
+                }
             }
             PagingSet set = this.workflowService.queryWorkflows(start, limit,
                     where.toString(), sort, dir);
@@ -226,4 +230,20 @@ public class WorkflowController {
             e.printStackTrace();
         }
     }
+
+	@RequestMapping(params = { "action=delWorkflows" })
+	@ResponseBody
+	public JSONObject delWorkflows(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if (!LoginInfo.isAdmin(request)) {
+				return ExtJS.fail("非admin用户不能执行此操作！");
+			}
+			String ids = request.getParameter("ids");
+			ids = ids.substring(1);
+			this.workflowService.deleteWorkflows(ids);
+		} catch (Exception e) {
+			return ExtJS.fail("删除任务失败，请刷新页面后重试！");
+		}
+		return ExtJS.ok("删除任务成功！");
+	}
 }

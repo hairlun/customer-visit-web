@@ -7,7 +7,7 @@ import java.util.List;
 public abstract interface WorkflowService {
 	public abstract void addWorkflow(Workflow paramWorkflow);
 
-	public abstract void deleteWorkflow(String paramString1);
+	public abstract void deleteWorkflows(String paramString1);
 
 	public abstract Workflow getWorkflow(long paramLong);
 
