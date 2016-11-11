@@ -55,6 +55,20 @@ Ext.haode.Control.prototype = {
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
+			}, {
+				header : '部门',
+				width : 230,
+				dataIndex : 'department',
+				sortable : true,
+				remoteSort : true,
+				align : 'center'
+			}, {
+				header : '片区',
+				width : 230,
+				dataIndex : 'area',
+				sortable : true,
+				remoteSort : true,
+				align : 'center'
 			}]);
 			this.store = new Ext.data.Store({
 				proxy : new Ext.data.HttpProxy({
@@ -64,7 +78,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'name', 'username', 'password']
+					fields : ['id', 'name', 'username', 'password', 'department', 'area']
 				}),
 				remoteSort : true
 			});
@@ -150,7 +164,7 @@ Ext.haode.Control.prototype = {
 					allowBlank : false,
 					xtype : 'textfield',
 					id : 'username',
-					blankText : '编号不能为空'
+					blankText : '客户经理用户名不能为空'
 				}, {
 					fieldLabel : '密码',
 					xtype : 'textfield',
@@ -165,6 +179,17 @@ Ext.haode.Control.prototype = {
 					id : 'cpassword',
 					allowBlank : false,
 					blankText : '确认密码不能为空'
+				}, {
+					fieldLabel : '部门',
+					allowBlank : false,
+					xtype : 'textfield',
+					id : 'department',
+					blankText : '部门不能为空'
+				}, {
+					fieldLabel : '片区',
+					allowBlank : true,
+					xtype : 'textfield',
+					id : 'area'
 				}],
 				buttons : [{
 					text : '确定',
@@ -181,13 +206,19 @@ Ext.haode.Control.prototype = {
 							alert('前后密码输入不一致，请重新输入！');
 							return;
 						}
+						if (Ext.getCmp('department').getValue().trim().length < 1) {
+							alert('部门不能为空');
+							return;
+						}
 						Ext.MessageBox.wait('正在操作','请稍后...');
 						Ext.haode.ajax({
 							url : 'customerManager.do?action=addManager',
 							params : {
 								name : Ext.getCmp('name').getValue(),
 								username : Ext.getCmp('username').getValue(),
-								password :  hex_md5(Ext.getCmp('password').getValue())
+								password : hex_md5(Ext.getCmp('password').getValue()),
+								department : Ext.getCmp('department').getValue(),
+								area : Ext.getCmp('area').getValue()
 							},
 							callback : function() {
 								Ext.MessageBox.hide();
@@ -275,6 +306,19 @@ Ext.haode.Control.prototype = {
 					value : records[0].get('password'),
 					allowBlank : false,
 					blankText : '确认密码不能为空'
+				}, {
+					fieldLabel : '部门',
+					allowBlank : false,
+					xtype : 'textfield',
+					id : 'edepartment',
+					value : records[0].get('department'),
+					blankText : '部门不能为空'
+				}, {
+					fieldLabel : '片区',
+					allowBlank : true,
+					xtype : 'textfield',
+					id : 'earea',
+					value : records[0].get('area')
 				}],
 				buttons : [{
 					text : '确定',
@@ -303,7 +347,9 @@ Ext.haode.Control.prototype = {
 								name : Ext.getCmp('ename').getValue(),
 								username : Ext.getCmp('eusername').getValue(),
 								ousername : records[0].get('username'),
-								password : password
+								password : password,
+								department : Ext.getCmp('edepartment').getValue(),
+								area : Ext.getCmp('earea').getValue()
 							},
 							callback : function() {
 								Ext.MessageBox.hide();

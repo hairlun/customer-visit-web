@@ -25,8 +25,8 @@ public class CustomerManagerServiceImpl implements CustomerManagerService {
 	}
 
 	public PagingSet<CustomerManager> getCustomerManagers(int start, int pageSize,
-			String sort, String dir) {
-		return this.customerManagerDao.getCustomerMangers(start, pageSize, sort, dir);
+			String sort, String dir, String where) {
+		return this.customerManagerDao.getCustomerMangers(start, pageSize, sort, dir, where);
 	}
 
 	public boolean usernameExist(String username) {

@@ -17,5 +17,5 @@ public abstract interface CustomerManagerService {
 	public abstract CustomerManager getCustomerManager(long paramLong);
 
 	public abstract PagingSet<CustomerManager> getCustomerManagers(int paramInt1, int paramInt2,
-			String paramString3, String paramString4);
+			String paramString3, String paramString4, String paramString5);
 }

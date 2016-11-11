@@ -7,7 +7,8 @@ public class CustomerManager extends GeneralObject implements Serializable {
 	private String username;
 	private String password;
 	private String name;
-	private Department department;
+	private String department;
+	private String area;
 
 	public String getName() {
 		return this.name;
@@ -33,11 +34,19 @@ public class CustomerManager extends GeneralObject implements Serializable {
 		this.password = password;
 	}
 
-	public Department getDepartment() {
-		return department;
-	}
+    public String getDepartment() {
+        return department;
+    }
 
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 }

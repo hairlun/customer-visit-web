@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -44,7 +45,16 @@ public class CustomerManagerController {
 			int limit = NumberUtils.toInt((String) param.get("limit"), 20);
 			String sort = (String)param.get("sort");
 			String dir = (String)param.get("dir");
-			PagingSet set = this.customerManagerService.getCustomerManagers(start, limit, sort, dir);
+			String department = (String)param.get("department");
+			String area = (String)param.get("area");
+			StringBuffer where = new StringBuffer("");
+			if (StringUtils.hasLength(department)) {
+			    where.append(" and department like '%" + department + "%'");
+			}
+			if (StringUtils.hasLength(area)) {
+			    where.append(" and area like '%" + area + "%'");
+			}
+			PagingSet set = this.customerManagerService.getCustomerManagers(start, limit, sort, dir, where.toString());
 
 			JSONArray rows = new JSONArray();
 			JSONObject main = new JSONObject();
@@ -55,6 +65,8 @@ public class CustomerManagerController {
 				row.put("name", manager.getName());
 				row.put("username", manager.getUsername());
 				row.put("password", manager.getPassword());
+				row.put("department", manager.getDepartment());
+				row.put("area", manager.getArea());
 				rows.put(row);
 			}
 			main.put("rows", rows);
@@ -85,9 +97,13 @@ public class CustomerManagerController {
 			CustomerManager manager = new CustomerManager();
 			String name = request.getParameter("name");
 			String password = request.getParameter("password");
+			String department = request.getParameter("department");
+			String area = request.getParameter("area");
 			manager.setName(name);
 			manager.setUsername(username);
 			manager.setPassword(password);
+			manager.setDepartment(department);
+			manager.setArea(area);
 			this.customerManagerService.addCustomerManager(manager);
 			return ExtJS.ok("新增客户经理成功！");
 		} catch (Exception e) {
@@ -108,6 +124,8 @@ public class CustomerManagerController {
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			String ousername = request.getParameter("ousername");
+			String department = request.getParameter("department");
+			String area = request.getParameter("area");
 			if ((!username.equals(ousername))
 					&& (this.customerManagerService.usernameExist(username))) {
 				return ExtJS.fail("用户名已存在，请重新输入!");
@@ -119,6 +137,8 @@ public class CustomerManagerController {
 			manager.setName(name);
 			manager.setUsername(username);
 			manager.setPassword(password);
+			manager.setDepartment(department);
+			manager.setArea(area);
 			this.customerManagerService.updateCustomerManager(manager);
 			return ExtJS.ok("修改成功！");
 		} catch (Exception e) {

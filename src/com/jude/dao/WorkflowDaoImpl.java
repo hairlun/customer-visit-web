@@ -2,7 +2,6 @@ package com.jude.dao;
 
 import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
-import com.jude.entity.Department;
 import com.jude.entity.RecordDetail;
 import com.jude.entity.Workflow;
 import com.jude.entity.WorkflowReply;
@@ -50,7 +49,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 	}
 
 	public Workflow getWorkflow(long id) {
-		String sql = "select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cmd.id as cmdid, cmd.name as cmdname, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pfd.id as pfdid, pfd.name as pfdname, h.id as hid, h.name as hname, h.username as husername, hd.id as hdid, hd.name as hdname, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN department_manager_relation cmdr on cmdr.manager_id = cm.id LEFT JOIN department cmd on cmdr.department_id = cmd.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN department_manager_relation pfdr on pfdr.manager_id = pf.id LEFT JOIN department pfd on pfd.id = pfdr.department_id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN department_manager_relation hdr on hdr.manager_id = h.id LEFT JOIN department hd on hdr.department_id = hd.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where w.id = "
+		String sql = "select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cm.department as cmdepartment, cm.area as cmarea, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pf.department as pfdepartment, pf.area as pfarea, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where w.id = "
 				+ id;
 
 		List workflows = this.jdbcTemplate.query(sql, new WorkflowRowMapper());
@@ -62,7 +61,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 
 	public PagingSet<Workflow> queryWorkflows(int start, int limit, String condition, String sort,
 			String dir) {
-		String sql = "select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cmd.id as cmdid, cmd.name as cmdname, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pfd.id as pfdid, pfd.name as pfdname, h.id as hid, h.name as hname, h.username as husername, hd.id as hdid, hd.name as hdname, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN department_manager_relation cmdr on cmdr.manager_id = cm.id LEFT JOIN department cmd on cmdr.department_id = cmd.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN department_manager_relation pfdr on pfdr.manager_id = pf.id LEFT JOIN department pfd on pfd.id = pfdr.department_id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN department_manager_relation hdr on hdr.manager_id = h.id LEFT JOIN department hd on hdr.department_id = hd.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where 1 = 1 ";
+		String sql = "select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cm.department as cmdepartment, cm.area as cmarea, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pf.department as pfdepartment, pf.area as pfarea, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where 1 = 1 ";
 		if (condition != null && !condition.equals("")) {
 			sql = sql + condition;
 		}
@@ -76,7 +75,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 	}
 
 	public List<Workflow> queryWorkflowsByIds(String ids) {
-		String sql = "select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cmd.id as cmdid, cmd.name as cmdname, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pfd.id as pfdid, pfd.name as pfdname, h.id as hid, h.name as hname, h.username as husername, hd.id as hdid, hd.name as hdname, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN department_manager_relation cmdr on cmdr.manager_id = cm.id LEFT JOIN department cmd on cmdr.department_id = cmd.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN department_manager_relation pfdr on pfdr.manager_id = pf.id LEFT JOIN department pfd on pfd.id = pfdr.department_id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN department_manager_relation hdr on hdr.manager_id = h.id LEFT JOIN department hd on hdr.department_id = hd.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where w.id in ("
+		String sql = "select select w.id, w.address, w.receive_time, w.handle_time, w.solved_time, w.description, w.remark, w.response_network, c.id as cid, c.name as cname, c.sell_number as csell_number, c.store_name as cstore_name, c.number as cnumber, c.phone_number as cphone_number, c.backup_number as cbackup_number, c.address as caddress, c.gps as cgps, cm.id as cmid, cm.name as cmname, cm.username as cmusername, cm.department as cmdepartment, cm.area as cmarea, pf.id as pfid, pf.name as pfname, pf.username as pfusername, pf.department as pfdepartment, pf.area as pfarea, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, i.id as iid, i.name as iname from workflow w LEFT JOIN customer c on w.customer_id = c.id LEFT JOIN customer_manager cm on c.manager_id = cm.id LEFT JOIN customer_manager pf on w.problem_finder_id = pf.id LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN workflow_interactive_item_relation wir on w.id = wir.workflow_id LEFT JOIN interactive_item i on wir.item_id = i.id where w.id in ("
 				+ ids + ")";
 		return this.jdbcTemplate.query(sql, new WorkflowRowMapper());
 	}
@@ -98,29 +97,23 @@ public class WorkflowDaoImpl implements WorkflowDao {
 			customerManager.setId(Long.valueOf(rs.getLong("cmid")));
 			customerManager.setName(rs.getString("cmname"));
 			customerManager.setUsername(rs.getString("cmusername"));
-			Department cmd = new Department();
-			cmd.setId(Long.valueOf(rs.getLong("cmdid")));
-			cmd.setName(rs.getString("cmdname"));
-			customerManager.setDepartment(cmd);
+			customerManager.setDepartment(rs.getString("cmdepartment"));
+			customerManager.setArea(rs.getString("cmarea"));
 			customer.setCustomerManager(customerManager);
 			workflow.setCustomer(customer);
 			CustomerManager problemFinder = new CustomerManager();
 			problemFinder.setId(Long.valueOf(rs.getLong("pfid")));
 			problemFinder.setName(rs.getString("pfname"));
 			problemFinder.setUsername(rs.getString("pfusername"));
-			Department pfd = new Department();
-			pfd.setId(Long.valueOf(rs.getLong("pfdid")));
-			pfd.setName(rs.getString("pfdname"));
-			problemFinder.setDepartment(pfd);
+			problemFinder.setDepartment(rs.getString("pfdepartment"));
+			problemFinder.setArea(rs.getString("pfarea"));
 			workflow.setProblemFinder(problemFinder);
 			CustomerManager handler = new CustomerManager();
 			handler.setId(Long.valueOf(rs.getLong("hid")));
 			handler.setName(rs.getString("hname"));
 			handler.setUsername(rs.getString("husername"));
-			Department hd = new Department();
-			hd.setId(Long.valueOf(rs.getLong("hdid")));
-			hd.setName(rs.getString("hdname"));
-			handler.setDepartment(hd);
+			handler.setDepartment(rs.getString("hdepartment"));
+			handler.setArea(rs.getString("harea"));
 			workflow.setHandler(handler);
 			workflow.setId(rs.getLong("w.id"));
 			workflow.setAddress(rs.getString("w.address"));

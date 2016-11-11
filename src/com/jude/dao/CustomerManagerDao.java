@@ -19,7 +19,7 @@ public abstract interface CustomerManagerDao {
 	public abstract CustomerManager getCustomerManager(long paramLong);
 
 	public abstract PagingSet<CustomerManager> getCustomerMangers(int paramInt1, int paramInt2,
-			String paramString3, String paramString4);
+			String paramString3, String paramString4, String paramString5);
 	
-	public abstract List<CustomerManager> getCustomerManagersByDepartmentIds(String paramString);
+	public abstract List<CustomerManager> getCustomerManagersByDepartment(String paramString);
 }

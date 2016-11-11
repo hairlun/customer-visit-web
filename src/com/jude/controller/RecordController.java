@@ -275,7 +275,7 @@ public class RecordController {
 	public String zip(Map<String, Object> param, String name, String path) {
 		byte[] buf = new byte[1024];
 		name = "zipfile";
-		List<CustomerManager> customerManagers = this.customerManagerService.getCustomerManagers(0, 10000, null, null).getList();
+		List<CustomerManager> customerManagers = this.customerManagerService.getCustomerManagers(0, 10000, null, null, null).getList();
 		File zipFile = new File(System.getProperty("java.io.tmpdir"), name + ".zip");
 		try {
 			ZipOutputStream zos = new ZipOutputStream(zipFile);

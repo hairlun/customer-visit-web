@@ -135,17 +135,19 @@ public class WorkflowController {
                             .getBackupNumber());
                     row.put("caddress", workflow.getCustomer().getAddress());
                     row.put("cgps", workflow.getCustomer().getGps());
-                    if (workflow.getCustomer().getCustomerManager().getName() != null) {
-                        row.put("cmid", workflow.getCustomer()
-                                .getCustomerManager().getId());
-                        row.put("cmname", workflow.getCustomer()
-                                .getCustomerManager().getName());
-                        row.put("cmusername", workflow.getCustomer()
-                                .getCustomerManager().getUsername());
+                    CustomerManager cm = workflow.getCustomer().getCustomerManager();
+                    if (cm.getName() != null) {
+                        row.put("cmid", cm.getId());
+                        row.put("cmname", cm.getName());
+                        row.put("cmusername", cm.getUsername());
+                        row.put("cmdepartment", cm.getDepartment());
+                        row.put("cmarea", cm.getArea());
                     } else {
                         row.put("cmid", "");
                         row.put("cmname", "");
                         row.put("cmusername", "");
+                        row.put("cmdepartment", "");
+                        row.put("cmarea", "");
                     }
                 } else {
                     row.put("cid", "");
@@ -160,60 +162,53 @@ public class WorkflowController {
                     row.put("cmid", "");
                     row.put("cmname", "");
                     row.put("cmusername", "");
+                    row.put("cmdepartment", "");
+                    row.put("cmarea", "");
                 }
-                if (workflow.getProblemFinder().getName() != null) {
-                    row.put("pfid", workflow.getProblemFinder().getId());
-                    row.put("pfname", workflow.getProblemFinder().getName());
-                    row.put("pfusername", workflow.getProblemFinder()
-                            .getUsername());
-                    if (workflow.getProblemFinder().getDepartment().getName() != null) {
-                        row.put("pfdid", workflow.getProblemFinder()
-                                .getDepartment().getId());
-                        row.put("pfdname", workflow.getProblemFinder()
-                                .getDepartment().getName());
-                        row.put("problem_finder", workflow.getProblemFinder()
-                                .getName()
-                                + "("
-                                + workflow.getProblemFinder().getDepartment()
-                                        .getName() + ")");
-                    } else {
-                        row.put("pfdid", "");
-                        row.put("pfdname", "");
-                        row.put("problem_finder", workflow.getProblemFinder()
-                                .getName());
+                CustomerManager pf = workflow.getProblemFinder();
+                if (pf.getName() != null) {
+                    row.put("pfid", pf.getId());
+                    row.put("pfname", pf.getName());
+                    row.put("pfusername", pf.getUsername());
+                    row.put("pfdepartment", pf.getDepartment());
+                    row.put("pfarea", pf.getArea());
+                    StringBuffer problemFinder = new StringBuffer(pf.getName());
+                    if (StringUtils.hasLength(pf.getDepartment())) {
+                        problemFinder.append("-" + pf.getDepartment());
                     }
+                    if (StringUtils.hasLength(pf.getArea())) {
+                        problemFinder.append("-" + pf.getArea());
+                    }
+                    row.put("problem_finder", problemFinder.toString());
                 } else {
                     row.put("pfid", "");
                     row.put("pfname", "");
                     row.put("pfusername", "");
-                    row.put("pfdid", "");
-                    row.put("pfdname", "");
+                    row.put("pfdepartment", "");
+                    row.put("pfarea", "");
                     row.put("problem_finder", "");
                 }
-                if (workflow.getHandler().getName() != null) {
-                    row.put("hid", workflow.getHandler().getId());
-                    row.put("hname", workflow.getHandler().getName());
-                    row.put("husername", workflow.getHandler().getUsername());
-                    if (workflow.getHandler().getDepartment().getName() != null) {
-                        row.put("hdid", workflow.getHandler().getDepartment()
-                                .getId());
-                        row.put("hdname", workflow.getHandler().getDepartment()
-                                .getName());
-                        row.put("handler", workflow.getHandler().getName()
-                                + "("
-                                + workflow.getHandler().getDepartment()
-                                        .getName() + ")");
-                    } else {
-                        row.put("hdid", "");
-                        row.put("hdname", "");
-                        row.put("handler", workflow.getHandler().getName());
+                CustomerManager h = workflow.getHandler();
+                if (h.getName() != null) {
+                    row.put("hid", h.getId());
+                    row.put("hname", h.getName());
+                    row.put("husername", h.getUsername());
+                    row.put("hdepartment", h.getDepartment());
+                    row.put("harea", h.getArea());
+                    StringBuffer handler = new StringBuffer(h.getName());
+                    if (StringUtils.hasLength(h.getDepartment())) {
+                        handler.append("-" + h.getDepartment());
                     }
+                    if (StringUtils.hasLength(h.getArea())) {
+                        handler.append("-" + h.getArea());
+                    }
+                    row.put("handler", handler.toString());
                 } else {
                     row.put("hid", "");
                     row.put("hname", "");
                     row.put("husername", "");
-                    row.put("hdid", "");
-                    row.put("hdname", "");
+                    row.put("hdepartment", "");
+                    row.put("harea", "");
                     row.put("handler", "");
                 }
                 rows.put(row);

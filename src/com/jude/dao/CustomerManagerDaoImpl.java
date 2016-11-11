@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository("customerManagerDao")
 public class CustomerManagerDaoImpl implements CustomerManagerDao {
@@ -23,9 +24,9 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 
 	public void addCustomerManager(CustomerManager customerManager) {
 		this.jdbcTemplate.update(
-				"insert into customer_manager(name, username, password) values(?, ?, ?)",
+				"insert into customer_manager(name, username, password, department, area) values(?, ?, ?, ?, ?)",
 				new Object[] { customerManager.getName(), customerManager.getUsername(),
-						customerManager.getPassword() });
+						customerManager.getPassword(), customerManager.getDepartment(), customerManager.getArea() });
 	}
 
 	public void deleteCustomerManagers(String ids) {
@@ -33,13 +34,16 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 	}
 
 	public PagingSet<CustomerManager> getCustomerMangers(int start, int pageSize,
-			String sort, String dir) {
+			String sort, String dir, String where) {
 		String sql;
 		if (sort != null && !sort.equals("") && dir != null && !dir.equals("")) {
-			sql = "select id, name, username, password from customer_manager order by "
-					+ sort + " " + dir;
+			sql = "select id, name, username, password, department, area from customer_manager order by "
+					+ sort + " " + dir + " where 1=1 ";
 		} else {
-			sql = "select id, name, username, password from customer_manager";
+			sql = "select id, name, username, password, department, area from customer_manager where 1=1 ";
+		}
+		if (StringUtils.hasLength(where)) {
+		    sql += where;
 		}
 		PagingHelper h = new PagingHelper(this.jdbcTemplate);
 		h.setInParameters(sql, start, pageSize);
@@ -49,7 +53,7 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 
 	public CustomerManager getCustomerManager(String username) {
 		List list = this.jdbcTemplate.query(
-				"select id, name, username, password from customer_manager where username = ?",
+				"select id, name, username, password, department, area from customer_manager where username = ?",
 				new Object[] { username }, new CustomerManagerRowMapper());
 
 		if ((list != null) && (list.size() > 0)) {
@@ -60,7 +64,7 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 
 	public CustomerManager getCustomerManager(long id) {
 		List list = this.jdbcTemplate.query(
-				"select id, name, username, password from customer_manager where id = ?",
+				"select id, name, username, password, department, area from customer_manager where id = ?",
 				new Object[] { Long.valueOf(id) }, new CustomerManagerRowMapper());
 
 		if ((list != null) && (list.size() > 0)) {
@@ -69,16 +73,15 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 		return null;
 	}
 
-	public List<CustomerManager> getCustomerManagersByDepartmentIds(String ids) {
-		String sql = "select distinct m.id, m.name, m.username, m.password from customer_manager m left join department_manager_relation dmr on m.id = dmr.manager_id where dmr.department_id in ("
-				+ ids + ")";
+	public List<CustomerManager> getCustomerManagersByDepartment(String department) {
+		String sql = "select distinct id, name, username, password from customer_manager where department = " + department;
 		return this.jdbcTemplate.query(sql, new CustomerManagerRowMapper());
 	}
 
 	public void updateCustomerManager(CustomerManager manager) {
 		this.jdbcTemplate.update(
-				"update customer_manager set name = ?, password = ?, username = ? where id = ?",
-				new Object[] { manager.getName(), manager.getPassword(), manager.getUsername(),
+				"update customer_manager set name = ?, password = ?, username = ?, department = ?, area = ? where id = ?",
+				new Object[] { manager.getName(), manager.getPassword(), manager.getUsername(), manager.getDepartment(), manager.getArea(),
 						manager.getId() });
 	}
 
@@ -97,6 +100,8 @@ public class CustomerManagerDaoImpl implements CustomerManagerDao {
 			manager.setName(rs.getString("name"));
 			manager.setPassword(rs.getString("password"));
 			manager.setUsername(rs.getString("username"));
+			manager.setDepartment(rs.getString("department"));
+			manager.setArea(rs.getString("area"));
 			return manager;
 		}
 	}
