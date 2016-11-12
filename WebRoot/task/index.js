@@ -297,7 +297,7 @@ Ext.haode.Control.prototype = {
 								root : 'rows',
 								totalProperty : 'total',
 								id : 'id',
-								fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
+								fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'manager', 
 								          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 							})
 						});
@@ -368,7 +368,7 @@ Ext.haode.Control.prototype = {
 								}, {
 									header : '客户经理',
 									width : 120,
-									dataIndex : 'mname',
+									dataIndex : 'manager',
 									sortable : true,
 									remoteSort : true,
 									align : 'center'
@@ -513,7 +513,7 @@ Ext.haode.Control.prototype = {
 													root : 'rows',
 													totalProperty : 'total',
 													id : 'id',
-													fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
+													fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'manager', 
 													          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 												})
 											});
@@ -584,7 +584,7 @@ Ext.haode.Control.prototype = {
 													}, {
 														header : '客户经理',
 														width : 120,
-														dataIndex : 'mname',
+														dataIndex : 'manager',
 														sortable : true,
 														remoteSort : true,
 														align : 'center'
@@ -716,7 +716,7 @@ Ext.haode.Control.prototype = {
 														dataIndex : 'name',
 														align : 'center'
 													}, {
-														header : '客户经理用户名',
+														header : '用户名',
 														width : 230,
 														dataIndex : 'username',
 														align : 'center'
@@ -1106,7 +1106,7 @@ Ext.haode.Control.prototype = {
 									root : 'rows',
 									totalProperty : 'total',
 									id : 'id',
-									fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
+									fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'manager', 
 									          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 								})
 							});
@@ -1177,7 +1177,7 @@ Ext.haode.Control.prototype = {
 									}, {
 										header : '客户经理',
 										width : 120,
-										dataIndex : 'mname',
+										dataIndex : 'manager',
 										sortable : true,
 										remoteSort : true,
 										align : 'center'
@@ -1322,7 +1322,7 @@ Ext.haode.Control.prototype = {
 														root : 'rows',
 														totalProperty : 'total',
 														id : 'id',
-														fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'mname', 
+														fields : ['id', 'name', 'number', 'sell_number', 'store_name', 'level', 'phone_number', 'manager', 
 														          'backup_number', 'address', 'order_type', 'gps', 'last_visit_time']
 													})
 												});
@@ -1393,7 +1393,7 @@ Ext.haode.Control.prototype = {
 														}, {
 															header : '客户经理',
 															width : 120,
-															dataIndex : 'mname',
+															dataIndex : 'manager',
 															sortable : true,
 															remoteSort : true,
 															align : 'center'
@@ -1525,7 +1525,7 @@ Ext.haode.Control.prototype = {
 															dataIndex : 'name',
 															align : 'center'
 														}, {
-															header : '客户经理用户名',
+															header : '用户名',
 															width : 230,
 															dataIndex : 'username',
 															align : 'center'

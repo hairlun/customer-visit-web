@@ -115,11 +115,20 @@ public class CustomerController {
 					row.put("lat", "");
 				}
 				CustomerManager cm = customer.getCustomerManager();
-				if (cm != null && cm.getName() != null && cm.getUsername() != null) {
-					row.put("mname", customer.getCustomerManager().getName() + "("
-							+ customer.getCustomerManager().getUsername() + ")");
+				StringBuffer manager = new StringBuffer();
+				if (cm != null) {
+				    if (!StringUtils.isBlank(cm.getName())) {
+				        manager.append(cm.getName());
+				    }
+				    if (!StringUtils.isBlank(cm.getDepartment())) {
+				        manager.append("-" + cm.getDepartment());
+				    }
+				    if (!StringUtils.isBlank(cm.getArea())) {
+				        manager.append("-" + cm.getArea());
+				    }
+				    row.put("manager", manager.toString());
 				} else {
-					row.put("mname", "");
+					row.put("manager", "");
 				}
 
 				Date lastVisitTime = customer.getLastVisitTime();

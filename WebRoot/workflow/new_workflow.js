@@ -141,7 +141,7 @@ Ext.haode.Control.prototype = {
 										dataIndex : 'name',
 										align : 'center'
 									}, {
-										header : '客户经理用户名',
+										header : '用户名',
 										width : 230,
 										dataIndex : 'username',
 										align : 'center'

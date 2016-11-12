@@ -160,11 +160,11 @@ Ext.haode.Control.prototype = {
 					allowBlank : false,
 					blankText : '客户经理名称不能为空'
 				}, {
-					fieldLabel : '客户经理用户名',
+					fieldLabel : '用户名',
 					allowBlank : false,
 					xtype : 'textfield',
 					id : 'username',
-					blankText : '客户经理用户名不能为空'
+					blankText : '用户名不能为空'
 				}, {
 					fieldLabel : '密码',
 					xtype : 'textfield',
@@ -284,12 +284,12 @@ Ext.haode.Control.prototype = {
 					value : records[0].get('name'),
 					blankText : '客户经理名称不能为空'
 				}, {
-					fieldLabel : '客户经理用户名',
+					fieldLabel : '用户名',
 					allowBlank : false,
 					xtype : 'textfield',
 					id : 'eusername',
 					value : records[0].get('username'),
-					blankText : '编号不能为空'
+					blankText : '用户名不能为空'
 				}, {
 					fieldLabel : '密码',
 					xtype : 'textfield',

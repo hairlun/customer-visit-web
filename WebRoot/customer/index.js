@@ -86,7 +86,7 @@ Ext.haode.Control.prototype = {
 			}, {
 				header : '客户经理',
 				width : 120,
-				dataIndex : 'mname',
+				dataIndex : 'manager',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
@@ -142,7 +142,7 @@ Ext.haode.Control.prototype = {
 					totalProperty : 'total',
 					id : 'id',
 					fields : ['id', 'number', 'name', 'sell_number', 'store_name', 'level', 'phone_number', 
-					          'backup_number', 'address', 'order_type', 'lng', 'lat', 'mname', 'last_visit_time']
+					          'backup_number', 'address', 'order_type', 'lng', 'lat', 'manager', 'last_visit_time']
 				}),
 				remoteSort : true
 //				autoLoad : true
@@ -804,7 +804,7 @@ Ext.haode.Control.prototype = {
 				root : 'rows',
 				totalProperty : 'total',
 				id : 'id',
-				fields : ['id', 'name', 'username']
+				fields : ['id', 'name', 'username', 'department', 'area']
 			})
 		});
 
@@ -822,7 +822,7 @@ Ext.haode.Control.prototype = {
 			layout : 'fit',
 			border : false,
 			modal : true,
-			width : 500,
+			width : 600,
 			height : 400,
 			items : [new Ext.grid.GridPanel({
 				id : 'grid1',
@@ -844,13 +844,23 @@ Ext.haode.Control.prototype = {
 //				sm : ,
 				cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), {
 					header : '客户经理名称',
-					width : 200,
+					width : 130,
 					dataIndex : 'name',
 					align : 'center'
 				}, {
-					header : '客户经理用户名',
-					width : 230,
+					header : '用户名',
+					width : 130,
 					dataIndex : 'username',
+					align : 'center'
+				}, {
+					header : '部门',
+					width : 130,
+					dataIndex : 'department',
+					align : 'center'
+				}, {
+					header : '片区',
+					widht : 130,
+					dataIndex : 'area',
 					align : 'center'
 				}]),
 				bbar : paging
