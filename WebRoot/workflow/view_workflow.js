@@ -137,7 +137,7 @@ Ext.haode.Control.prototype = {
 			}, {
 				header : '责任网格',
 				width : 120,
-				dataIndex : 'response_network',
+				dataIndex : 'cmarea',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
@@ -163,14 +163,14 @@ Ext.haode.Control.prototype = {
 				remoteSort : true,
 				align : 'center'
 			}, {
-				header : '反馈方姓名（部门）',
+				header : '反馈方',
 				width : 160,
 				dataIndex : 'problem_finder',
 				sortable : true,
 				remoteSort : true,
 				align : 'center',
 			}, {
-				header : '处置方姓名（部门）',
+				header : '处置方',
 				width : 160,
 				dataIndex : 'handler',
 				sortable : true,
@@ -199,7 +199,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'address', 'receive_time', 'handle_time', 'solved_time', 'response_network', 'interactive_items', 'description', 'reply', 'problem_finder', 'handler', 'cname', 'remark']
+					fields : ['id', 'address', 'receive_time', 'handle_time', 'solved_time', 'cmarea', 'interactive_items', 'description', 'reply', 'problem_finder', 'handler', 'cname', 'remark']
 				}),
 				remoteSort : true
 			});

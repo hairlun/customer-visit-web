@@ -123,7 +123,7 @@ Ext.haode.Control.prototype = {
 			}, {
 				header : '客户经理',
 				width : 120,
-				dataIndex : 'mname',
+				dataIndex : 'manager',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
@@ -208,7 +208,7 @@ Ext.haode.Control.prototype = {
 					root : 'rows',
 					totalProperty : 'total',
 					id : 'id',
-					fields : ['id', 'cname', 'mname', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_dist', 'gps_flag', 'result_code', 'leave_time', 'cost']
+					fields : ['id', 'cname', 'manager', 'reject', 'type', 'visit_time', 'content', 'city', 'gps', 'gps_dist', 'gps_flag', 'result_code', 'leave_time', 'cost']
 				}),
 				remoteSort : true
 //				autoLoad : true

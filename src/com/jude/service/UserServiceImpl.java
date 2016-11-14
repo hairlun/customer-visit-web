@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
+	
+	private static User loginUser;
 
 	@Autowired
 	private UserDao userDao;
@@ -35,5 +37,13 @@ public class UserServiceImpl implements UserService {
 
 	public PagingSet<User> getUsers(int start, int pageSize) {
 		return this.userDao.getUsers(start, pageSize);
+	}
+
+	public static User getLoginUser() {
+		return loginUser;
+	}
+
+	public static void setLoginUser(User loginUser) {
+		UserServiceImpl.loginUser = loginUser;
 	}
 }

@@ -43,28 +43,28 @@ Ext.haode.Control.prototype = {
 			var sm =  new Ext.grid.CheckboxSelectionModel();
 			var cm = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), sm, {
 				header : '客户经理名称',
-				width : 200,
+				width : 130,
 				dataIndex : 'name',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
 			}, {
 				header : '用户名',
-				width : 230,
+				width : 130,
 				dataIndex : 'username',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
 			}, {
 				header : '部门',
-				width : 230,
+				width : 130,
 				dataIndex : 'department',
 				sortable : true,
 				remoteSort : true,
 				align : 'center'
 			}, {
 				header : '片区',
-				width : 230,
+				width : 130,
 				dataIndex : 'area',
 				sortable : true,
 				remoteSort : true,

@@ -45,7 +45,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	public PagingSet<Customer> getCustomers(int start, int pageSize) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id";
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id";
 		PagingHelper h = new PagingHelper(this.jdbcTemplate);
 		h.setInParameters(sql, start, pageSize);
 		PagingSet<Customer> pageSet = h.handle(new CustomerRowMapper());
@@ -53,7 +53,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	public PagingSet<Customer> getCustomers(int start, int pageSize, String sort, String dir) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id";
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id";
 		if (sort != null && !sort.equals("") && dir != null && !dir.equals("")) {
 			sql += " order by " + sort + " " + dir;
 		}
@@ -65,7 +65,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	public PagingSet<Customer> getCustomers(int start, int pageSize, int groupId,
 			String sort, String dir) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, cgr.group_id from (customer c left join customer_manager m on c.manager_id = m.id) left join customer_group_relation cgr on c.id = cgr.customer_id where cgr.group_id = " + groupId;
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea, cgr.group_id from (customer c left join customer_manager m on c.manager_id = m.id) left join customer_group_relation cgr on c.id = cgr.customer_id where cgr.group_id = " + groupId;
 		if (sort != null && !sort.equals("") && dir != null && !dir.equals("")) {
 			sql += " order by " + sort + " " + dir;
 		}
@@ -77,7 +77,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	public Customer getCustomer(int id) {
 		List<Customer> customers = this.jdbcTemplate
-				.query("select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id where c.id = "
+				.query("select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id where c.id = "
 						+ id, new CustomerRowMapper());
 		if ((customers != null) && (customers.size() > 0)) {
 			return (Customer) customers.get(0);
@@ -118,7 +118,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	public Customer getCustomerByNumber(String number) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id where c.number = '"
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id where c.number = '"
 				+ number + "'";
 		PagingHelper h = new PagingHelper(this.jdbcTemplate);
 		h.setInParameters(sql, 0, 10);
@@ -130,19 +130,19 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	public List<Customer> getCustomersByManagerIds(String ids) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id where c.manager_id in ("
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id where c.manager_id in ("
 				+ ids + ")";
 		return this.jdbcTemplate.query(sql, new CustomerRowMapper());
 	}
 
 	public List<Customer> getCustomersByGroupIds(String ids) {
-		String sql = "select distinct c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from (customer c left join customer_manager m on c.manager_id = m.id) left join customer_group_relation cgr on c.id = cgr.customer_id where cgr.group_id in ("
+		String sql = "select distinct c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from (customer c left join customer_manager m on c.manager_id = m.id) left join customer_group_relation cgr on c.id = cgr.customer_id where cgr.group_id in ("
 				+ ids + ")";
 		return this.jdbcTemplate.query(sql, new CustomerRowMapper());
 	}
 
 	public List<Customer> getCustomersByIds(String ids) {
-		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword from customer c left join customer_manager m on c.manager_id = m.id where c.id in ("
+		String sql = "select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id where c.id in ("
 				+ ids + ")";
 		return this.jdbcTemplate.query(sql, new CustomerRowMapper());
 	}
@@ -177,6 +177,8 @@ public class CustomerDaoImpl implements CustomerDao {
 					customerManager.setUsername(musername);
 					customerManager.setName(rs.getString("mname"));
 					customerManager.setPassword(rs.getString("mpassword"));
+					customerManager.setDepartment(rs.getString("mdepartment"));
+					customerManager.setArea(rs.getString("marea"));
 					customer.setCustomerManager(customerManager);
 				}
 			} catch (Exception e) {

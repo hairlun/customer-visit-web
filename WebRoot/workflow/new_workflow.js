@@ -58,7 +58,7 @@ Ext.haode.Control.prototype = {
 					id : 'customer',
 					xtype : 'textfield'
 				}, {
-					fieldLabel : '问题发生地点（或零售客户经营地址）',
+					fieldLabel : '问题发生地点',
 					allowBlank : false,
 					name : 'address',
 					id : 'address',
@@ -111,7 +111,7 @@ Ext.haode.Control.prototype = {
 									root : 'rows',
 									totalProperty : 'total',
 									id : 'id',
-									fields : ['id', 'name', 'username']
+									fields : ['id', 'name', 'username', 'department', 'area']
 								})
 							});
 
@@ -129,7 +129,7 @@ Ext.haode.Control.prototype = {
 								layout : 'fit',
 								border : false,
 								modal : true,
-								width : 500,
+								width : 600,
 								height : 400,
 								items : [new Ext.grid.GridPanel({
 									id : 'grid1',
@@ -137,13 +137,23 @@ Ext.haode.Control.prototype = {
 									store : store1,
 									cm : new Ext.grid.ColumnModel([new Ext.grid.RowNumberer({width:38}), {
 										header : '客户经理名称',
-										width : 200,
+										width : 130,
 										dataIndex : 'name',
 										align : 'center'
 									}, {
 										header : '用户名',
-										width : 230,
+										width : 130,
 										dataIndex : 'username',
+										align : 'center'
+									}, {
+										header : '部门',
+										width : 130,
+										dataIndex : 'department',
+										align : 'center'
+									}, {
+										header : '片区',
+										width : 130,
+										dataIndex : 'area',
 										align : 'center'
 									}]),
 									bbar : paging
@@ -157,7 +167,14 @@ Ext.haode.Control.prototype = {
 											return;
 										}
 										mid = mrecords[0].get('id');
-										Ext.getCmp('manager').setValue(mrecords[0].get('name') + "(" + mrecords[0].get('username') + ")");
+										var manager = mrecords[0].get('name');
+										if (mrecords[0].get('department') != "") {
+											manager = manager + "-" + mrecords[0].get('department');
+										}
+										if (mrecords[0].get('area') != "") {
+											manager = manager + "-" + mrecords[0].get('area');
+										}
+										Ext.getCmp('manager').setValue(manager);
 										
 										Ext.getCmp('bind').close();
 									}
@@ -182,7 +199,13 @@ Ext.haode.Control.prototype = {
 					allowBlank : false,
 					name : 'description',
 					id : 'description',
-					xtype : 'textfield'
+					xtype : 'textarea'
+				}, {
+					fieldLabel : '备注',
+					allowBlank : false,
+					name : 'remark',
+					id : 'remark',
+					xtype : 'textarea'
 				}, {
 					xtype : 'button',
 					id : 'tsb',
@@ -190,7 +213,7 @@ Ext.haode.Control.prototype = {
 					align : 'center',
 					width : 80,
 					handler : function() {
-						Ext.getCmp('problemFinder').setValue('admin');
+						Ext.getCmp('problemFinder').setValue(loginUser.username);
 						Ext.getCmp('handleTime').setValue(new Date());
 						if (!Ext.getCmp('form').getForm().isValid()) {
 							alert('请正确填写表单');

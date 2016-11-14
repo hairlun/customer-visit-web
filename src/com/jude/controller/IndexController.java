@@ -3,13 +3,17 @@ package com.jude.controller;
 import com.jude.entity.User;
 import com.jude.json.JSONArray;
 import com.jude.service.UserService;
+import com.jude.service.UserServiceImpl;
 import com.jude.util.CachedParams;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +69,7 @@ public class IndexController {
 			return "login/index.jsp";
 		}
 
+		UserServiceImpl.setLoginUser(user);
 		request.getSession().setAttribute("loginUser", user);
 		System.out.println(log.isInfoEnabled());
 		log.debug(user.getUsername() + " 登陆了系统");

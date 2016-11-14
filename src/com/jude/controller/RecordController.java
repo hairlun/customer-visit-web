@@ -100,8 +100,22 @@ public class RecordController {
 				row.put("id", record.getId());
 				row.put("cname", (record.getCustomer() == null) ? "" : record.getCustomer()
 						.getName());
-				row.put("mname", (record.getCustomerManager() == null) ? "" : record
-						.getCustomerManager().getName());
+				CustomerManager cm = record.getCustomerManager();
+				if (cm != null) {
+					StringBuffer manager = new StringBuffer();
+					if (StringUtils.hasLength(cm.getName())) {
+						manager.append(cm.getName());
+					}
+					if (StringUtils.hasLength(cm.getDepartment())) {
+						manager.append("-" + cm.getDepartment());
+					}
+					if (StringUtils.hasLength(cm.getArea())) {
+						manager.append("-" + cm.getArea());
+					}
+					row.put("manager", manager.toString());
+				} else {
+					row.put("manager", "");
+				}
 				row.put("content", record.getContent());
 				row.put("reject", record.getReject() == 1 ? "驳回" : "");
 				row.put("type", (record.getType() == 1) ? "签到未签退" : (record.getType() == 0) ? "未签到"

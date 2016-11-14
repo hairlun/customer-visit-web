@@ -8,6 +8,7 @@ import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
 import com.jude.service.CustomerManagerService;
 import com.jude.service.TaskService;
+import com.jude.service.UserServiceImpl;
 import com.jude.service.WorkflowService;
 import com.jude.util.ExcelColumn;
 import com.jude.util.ExcelExporter;
@@ -52,12 +53,14 @@ public class WorkflowController {
     private WorkflowService workflowService;
 
     @RequestMapping(params = { "action=newWorkflow" })
-    public String newWorkflow() {
+    public String newWorkflow(HttpServletRequest request, HttpServletResponse response) {
+    	request.getSession().setAttribute("loginUser", UserServiceImpl.getLoginUser());
         return "workflow/new_workflow.jsp";
     }
 
     @RequestMapping(params = { "action=dealWorkflow" })
-    public String dealWorkflow() {
+    public String dealWorkflow(HttpServletRequest request, HttpServletResponse response) {
+    	request.getSession().setAttribute("loginUser", UserServiceImpl.getLoginUser());
         return "workflow/deal_workflow.jsp";
     }
 
