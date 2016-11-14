@@ -3,6 +3,7 @@ package com.jude.controller;
 import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
 import com.jude.entity.Task;
+import com.jude.entity.User;
 import com.jude.entity.Workflow;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
@@ -244,4 +245,16 @@ public class WorkflowController {
 		}
 		return ExtJS.ok("删除任务成功！");
 	}
+
+    @RequestMapping(params = { "action=newWorkflowSubmit" })
+    @ResponseBody
+    public JSONObject newWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
+        String customer = request.getParameter("customer");
+        String address = request.getParameter("address");
+        String sellNumber = request.getParameter("sellNumber");
+        String receiveTime = request.getParameter("receiveTime");
+        User problemFinder = LoginInfo.getUser(request);
+        
+        return ExtJS.ok("发起任务成功！");
+    }
 }

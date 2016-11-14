@@ -163,7 +163,7 @@ Ext.haode.Control.prototype = {
 									handler : function() {
 										var mrecords = Ext.getCmp('grid1').getSelectionModel().getSelections();
 										if (mrecords.length < 1) {
-											alert('请选择要绑定的客户经理!');
+											alert('请选择客户经理!');
 											return;
 										}
 										mid = mrecords[0].get('id');
@@ -202,7 +202,7 @@ Ext.haode.Control.prototype = {
 					xtype : 'textarea'
 				}, {
 					fieldLabel : '备注',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'remark',
 					id : 'remark',
 					xtype : 'textarea'
@@ -213,7 +213,7 @@ Ext.haode.Control.prototype = {
 					align : 'center',
 					width : 80,
 					handler : function() {
-						Ext.getCmp('problemFinder').setValue(loginUser.username);
+						Ext.getCmp('problemFinder').setValue('${loginUser.username}');
 						Ext.getCmp('handleTime').setValue(new Date());
 						if (!Ext.getCmp('form').getForm().isValid()) {
 							alert('请正确填写表单');
