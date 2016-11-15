@@ -3,13 +3,12 @@ package com.jude.controller;
 import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
 import com.jude.entity.Task;
-import com.jude.entity.User;
 import com.jude.entity.Workflow;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
 import com.jude.service.CustomerManagerService;
+import com.jude.service.CustomerManagerServiceImpl;
 import com.jude.service.TaskService;
-import com.jude.service.UserServiceImpl;
 import com.jude.service.WorkflowService;
 import com.jude.util.ExcelColumn;
 import com.jude.util.ExcelExporter;
@@ -25,8 +24,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,16 +53,19 @@ public class WorkflowController {
 
     @Autowired
     private WorkflowService workflowService;
+    
+    @Autowired
+    private CustomerManagerService customerManagerService;
 
     @RequestMapping(params = { "action=newWorkflow" })
     public String newWorkflow(HttpServletRequest request, HttpServletResponse response) {
-    	request.getSession().setAttribute("loginUser", UserServiceImpl.getLoginUser());
+    	request.getSession().setAttribute("loginUser", CustomerManagerServiceImpl.getLoginUser());
         return "workflow/new_workflow.jsp";
     }
 
     @RequestMapping(params = { "action=dealWorkflow" })
     public String dealWorkflow(HttpServletRequest request, HttpServletResponse response) {
-    	request.getSession().setAttribute("loginUser", UserServiceImpl.getLoginUser());
+    	request.getSession().setAttribute("loginUser", CustomerManagerServiceImpl.getLoginUser());
         return "workflow/deal_workflow.jsp";
     }
 
@@ -124,7 +128,6 @@ public class WorkflowController {
                 row.put("solved_time", sf.format(workflow.getSolvedTime()));
                 row.put("description", workflow.getDescription());
                 row.put("remark", workflow.getRemark());
-                row.put("response_network", workflow.getResponseNetwork());
                 if (workflow.getCustomer().getName() != null) {
                     row.put("cid", workflow.getCustomer().getId());
                     row.put("cname", workflow.getCustomer().getName());
@@ -252,8 +255,17 @@ public class WorkflowController {
         String customer = request.getParameter("customer");
         String address = request.getParameter("address");
         String sellNumber = request.getParameter("sellNumber");
-        String receiveTime = request.getParameter("receiveTime");
-        User problemFinder = LoginInfo.getUser(request);
+        try {
+			Date receiveTime = sf.parse(request.getParameter("receiveTime"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        CustomerManager problemFinder = customerManagerService.getCustomerManager(LoginInfo.getUser(request).getUsername());
+        Date handleTime = new Date();
+        String description = request.getParameter("description");
+        String remark = request.getParameter("remark");
+        
         
         return ExtJS.ok("发起任务成功！");
     }

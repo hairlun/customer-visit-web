@@ -3,11 +3,14 @@ package com.jude.service;
 import com.jude.dao.CustomerManagerDao;
 import com.jude.entity.CustomerManager;
 import com.jude.util.PagingSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("customerManagerService")
 public class CustomerManagerServiceImpl implements CustomerManagerService {
+	
+	private static CustomerManager loginUser;
 
 	@Autowired
 	private CustomerManagerDao customerManagerDao;
@@ -39,5 +42,13 @@ public class CustomerManagerServiceImpl implements CustomerManagerService {
 
 	public CustomerManager getCustomerManager(long id) {
 		return this.customerManagerDao.getCustomerManager(id);
+	}
+
+	public static CustomerManager getLoginUser() {
+		return loginUser;
+	}
+
+	public static void setLoginUser(CustomerManager loginUser) {
+		CustomerManagerServiceImpl.loginUser = loginUser;
 	}
 }

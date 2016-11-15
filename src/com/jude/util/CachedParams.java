@@ -17,13 +17,13 @@ public class CachedParams {
 		jo6.put("leaf", true);
 		jo6.put("text", "开关设置");
 		jo6.put("src", "switch.do?action=forwardIndex");
-		JSONObject jo7 = new JSONObject();
-		jo7.put("id", "7");
-		jo7.put("leaf", true);
-		jo7.put("text", "账号管理");
-		jo7.put("src", "user.do?action=forwardIndex");
+//		JSONObject jo7 = new JSONObject();
+//		jo7.put("id", "7");
+//		jo7.put("leaf", true);
+//		jo7.put("text", "账号管理");
+//		jo7.put("src", "user.do?action=forwardIndex");
 		systemChidren.put(jo6);
-		systemChidren.put(jo7);
+//		systemChidren.put(jo7);
 		
 		JSONArray workflowChildren = new JSONArray();
 		JSONObject jo12 = new JSONObject();

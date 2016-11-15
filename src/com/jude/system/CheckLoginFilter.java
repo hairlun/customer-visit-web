@@ -1,6 +1,5 @@
 package com.jude.system;
 
-import com.jude.entity.User;
 import com.jude.json.JSONObject;
 import com.jude.util.ExtJS;
 import com.jude.util.HttpUtils;

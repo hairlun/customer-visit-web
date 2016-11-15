@@ -4,7 +4,6 @@ import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
 import com.jude.entity.RecordDetail;
 import com.jude.entity.Task;
-import com.jude.entity.User;
 import com.jude.json.JSONObject;
 import com.jude.service.CustomerManagerService;
 import com.jude.service.CustomerService;

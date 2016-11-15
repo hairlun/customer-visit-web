@@ -1,9 +1,9 @@
 package com.jude.controller;
 
-import com.jude.entity.User;
+import com.jude.entity.CustomerManager;
 import com.jude.json.JSONArray;
-import com.jude.service.UserService;
-import com.jude.service.UserServiceImpl;
+import com.jude.service.CustomerManagerService;
+import com.jude.service.CustomerManagerServiceImpl;
 import com.jude.util.CachedParams;
 
 import java.io.IOException;
@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController {
 
 	@Autowired
-	private UserService userService;
+	private CustomerManagerService customerManagerService;
 	private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 
 	@RequestMapping({ "/index.do" })
 	public String forwardIndex(HttpServletRequest request, HttpServletResponse response) {
-		User user = LoginInfo.getUser(request);
+		CustomerManager user = LoginInfo.getUser(request);
 		if (user == null) {
 			return "loginview.do";
 		}
@@ -53,14 +53,14 @@ public class IndexController {
 		String name = request.getParameter("name");
 		String password = request.getParameter("pwd");
 
-		boolean b = this.userService.isUserExist(name);
+		boolean b = this.customerManagerService.usernameExist(name);
 		if (!b) {
 			request.setAttribute("msg", "用户名不存在!");
 			request.setAttribute("name", name);
 			return "login/index.jsp";
 		}
 
-		User user = this.userService.getUser(name);
+		CustomerManager user = this.customerManagerService.getCustomerManager(name);
 		String userPwd = user.getPassword();
 		if (!password.equals(userPwd)) {
 			setConfig(request);
@@ -69,7 +69,7 @@ public class IndexController {
 			return "login/index.jsp";
 		}
 
-		UserServiceImpl.setLoginUser(user);
+		CustomerManagerServiceImpl.setLoginUser(user);
 		request.getSession().setAttribute("loginUser", user);
 		System.out.println(log.isInfoEnabled());
 		log.debug(user.getUsername() + " 登陆了系统");

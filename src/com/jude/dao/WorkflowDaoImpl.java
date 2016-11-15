@@ -30,8 +30,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 								workflow.getAddress(), workflow.getReceiveTime(),
 								workflow.getProblemFinder().getId(), workflow.getHandleTime(),
 								workflow.getHandler().getId(), workflow.getSolvedTime(),
-								workflow.getDescription(), workflow.getRemark(),
-								workflow.getResponseNetwork() });
+								workflow.getDescription(), workflow.getRemark() });
 	}
 
 	public void deleteWorkflow(String ids) {
@@ -45,7 +44,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 								workflow.getReceiveTime(), workflow.getHandleTime(),
 								workflow.getHandler(), workflow.getSolvedTime(),
 								workflow.getDescription(), workflow.getRemark(),
-								workflow.getResponseNetwork(), workflow.getId() });
+								workflow.getId() });
 	}
 
 	public Workflow getWorkflow(long id) {
@@ -122,7 +121,6 @@ public class WorkflowDaoImpl implements WorkflowDao {
 			workflow.setSolvedTime(rs.getTimestamp("w.solved_time"));
 			workflow.setDescription(rs.getString("w.description"));
 			workflow.setRemark(rs.getString("w.remark"));
-			workflow.setResponseNetwork(rs.getString("w.response_network"));
 			
 			return workflow;
 		}
