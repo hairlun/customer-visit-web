@@ -12,6 +12,8 @@ public abstract interface CustomerService {
 
 	public abstract Customer getCustomer(int paramInt);
 
+    public abstract Customer getCustomer(String paramString);
+
 	public abstract PagingSet<Customer> getCustomers(int paramInt1, int paramInt2);
 
 	public abstract PagingSet<Customer> getCustomers(int paramInt1, int paramInt2, int paramInt3,

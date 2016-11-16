@@ -256,8 +256,8 @@ public class WorkflowController {
     @RequestMapping(params = { "action=newWorkflowSubmit" })
     @ResponseBody
     public JSONObject newWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
-        long customerId = Long.parseLong(request.getParameter("customer"));
-        Customer customer = customerService.getCustomer((int)customerId);
+        String customerName = request.getParameter("customer");
+        Customer customer = customerService.getCustomer(customerName);
         String address = request.getParameter("address");
         String sellNumber = request.getParameter("sellNumber");
         Date receiveTime = null;

@@ -85,6 +85,16 @@ public class CustomerDaoImpl implements CustomerDao {
 		return null;
 	}
 
+    public Customer getCustomer(String name) {
+        List<Customer> customers = this.jdbcTemplate
+                .query("select c.id, c.number, c.name, c.sell_number, c.store_name, c.level, c.phone_number, c.backup_number, c.address, c.manager_id, c.order_type, c.gps, c.last_visit_time, m.name as mname, m.username as musername, m.password as mpassword, m.department as mdepartment, m.area as marea from customer c left join customer_manager m on c.manager_id = m.id where c.name = "
+                        + name, new CustomerRowMapper());
+        if ((customers != null) && (customers.size() > 0)) {
+            return (Customer) customers.get(0);
+        }
+        return null;
+    }
+
 	public boolean checkExist(String number) {
 		int i = this.jdbcTemplate.queryForInt("select count(1) from customer where number = ?",
 				new Object[] { number });

@@ -26,6 +26,10 @@ public class CustomerServiceImpl implements CustomerService {
 		return this.customerDao.getCustomer(id);
 	}
 
+    public Customer getCustomer(String name) {
+        return this.customerDao.getCustomer(name);
+    }
+
 	public PagingSet<Customer> getCustomers(int start, int pageSize) {
 		return this.customerDao.getCustomers(start, pageSize);
 	}

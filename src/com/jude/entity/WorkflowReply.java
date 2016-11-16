@@ -1,6 +1,7 @@
 package com.jude.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class WorkflowReply implements Serializable {
 
@@ -14,8 +15,14 @@ public class WorkflowReply implements Serializable {
 	private long workflowId;
 
 	private String reply;
+	
+	private String remark;
 
 	private int orderNum;
+	
+	private CustomerManager handler;
+	
+	private Date handleTime;
 
 	public long getId() {
 		return id;
@@ -48,5 +55,29 @@ public class WorkflowReply implements Serializable {
 	public void setOrderNum(int orderNum) {
 		this.orderNum = orderNum;
 	}
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public CustomerManager getHandler() {
+        return handler;
+    }
+
+    public void setHandler(CustomerManager handler) {
+        this.handler = handler;
+    }
+
+    public Date getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(Date handleTime) {
+        this.handleTime = handleTime;
+    }
 
 }

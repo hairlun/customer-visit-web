@@ -8,7 +8,7 @@ import java.util.List;
 public abstract interface WorkflowDao {
 	public abstract void addWorkflow(Workflow paramWorkflow);
 
-	public abstract void deleteWorkflow(String paramString);
+	public abstract void deleteWorkflows(String paramString);
 
 	public abstract void updateWorkflow(Workflow paramWorkflow);
 
@@ -21,7 +21,7 @@ public abstract interface WorkflowDao {
 	
 	public abstract void addWorkflowReply(WorkflowReply paramWorkflowReply);
 	
-	public abstract void deleteWorkflowReply(String paramString);
+	public abstract void deleteWorkflowReplys(String paramString);
 	
 	public abstract WorkflowReply getWorkflowReply(long paramLong);
 	
@@ -30,5 +30,5 @@ public abstract interface WorkflowDao {
 	public abstract PagingSet<WorkflowReply> queryWorkflowReplies(int paramInt1, int paramInt2,
 			String paramString1, String paramString2, String paramString3);
 	
-	public abstract List<Workflow> queryWorkflowRepliesByIds(String paramString);
+	public abstract List<WorkflowReply> queryWorkflowRepliesByIds(String paramString);
 }
