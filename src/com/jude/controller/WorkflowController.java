@@ -8,6 +8,7 @@ import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
 import com.jude.service.CustomerManagerService;
 import com.jude.service.CustomerManagerServiceImpl;
+import com.jude.service.CustomerService;
 import com.jude.service.TaskService;
 import com.jude.service.WorkflowService;
 import com.jude.util.ExcelColumn;
@@ -49,10 +50,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping({ "/workflow.do" })
 public class WorkflowController {
     private static final SimpleDateFormat sf = new SimpleDateFormat(
-            "yyyy-MM-dd hh:mm:ss");
+            "yyyy-MM-dd hh:mm");
 
     @Autowired
     private WorkflowService workflowService;
+    
+    @Autowired
+    private CustomerService customerService;
     
     @Autowired
     private CustomerManagerService customerManagerService;
@@ -252,11 +256,13 @@ public class WorkflowController {
     @RequestMapping(params = { "action=newWorkflowSubmit" })
     @ResponseBody
     public JSONObject newWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
-        String customer = request.getParameter("customer");
+        long customerId = Long.parseLong(request.getParameter("customer"));
+        Customer customer = customerService.getCustomer((int)customerId);
         String address = request.getParameter("address");
         String sellNumber = request.getParameter("sellNumber");
+        Date receiveTime = null;
         try {
-			Date receiveTime = sf.parse(request.getParameter("receiveTime"));
+			receiveTime = sf.parse(request.getParameter("receiveTime"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -265,7 +271,15 @@ public class WorkflowController {
         Date handleTime = new Date();
         String description = request.getParameter("description");
         String remark = request.getParameter("remark");
-        
+        Workflow workflow = new Workflow();
+        workflow.setCustomer(customer);
+        workflow.setAddress(address);
+        workflow.setReceiveTime(receiveTime);
+        workflow.setProblemFinder(problemFinder);
+        workflow.setHandleTime(handleTime);
+        workflow.setDescription(description);
+        workflow.setRemark(remark);
+        workflowService.addWorkflow(workflow);
         
         return ExtJS.ok("发起任务成功！");
     }
