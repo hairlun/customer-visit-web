@@ -13,6 +13,7 @@ import com.jude.service.CustomerService;
 import com.jude.service.SwitchService;
 import com.jude.service.TaskService;
 import com.jude.service.VisitRecordService;
+import com.jude.service.WorkflowService;
 import com.jude.util.MD5;
 import com.jude.util.PagingSet;
 
@@ -58,6 +59,9 @@ public class MobileController {
 
 	@Autowired
 	private VisitRecordService recordService;
+	
+	@Autowired
+	private WorkflowService workflowService;
 
 	@Autowired
 	private SwitchService switchService;
@@ -474,6 +478,83 @@ public class MobileController {
 		}
 		write(response, json);
 	}
+
+    @RequestMapping({ "dealWorkflowList" })
+    public void dealWorkflowList(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject json = new JSONObject();
+        Long userId = Long.parseLong(request.getParameter("userId"));
+        int page = NumberUtils.toInt((String) request.getParameter("page"), 1);
+        int limit = NumberUtils.toInt((String) request.getParameter("limit"), -1);
+        if (limit == -1) {
+            page = 1;
+            limit = 1000000;
+        }
+        int start = page * limit - limit;
+        String keyword = request.getParameter("keyword");
+        if (keyword == null) {
+            keyword = "";
+        }
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        StringBuffer where = new StringBuffer();
+        if (userId != 1) {
+            where.append(" and m.id = ").append(userId);
+        }
+        if (keyword.length() > 0) {
+            where.append(" and (c.name like '%").append(keyword).append("%'");
+            where.append(" or c.sell_number like '%").append(keyword).append("%'");
+            where.append(" or c.phone_number like '%").append(keyword).append("%'");
+            where.append(" or c.backup_number like '%").append(keyword).append("%')");
+        }
+        try {
+            PagingSet pset = this.recordService.queryVisitRecords(start, limit, where.toString(), "visit_time", "DESC");
+            List<VisitRecord> list = pset.getList();
+            JSONArray ja = new JSONArray();
+            if ((list != null) && (list.size() > 0)) {
+                for (VisitRecord record : list) {
+                    JSONObject js = new JSONObject();
+                    js.put("username", record.getCustomerManager().getUsername());
+                    if (record.getVisitTime() != null) {
+                        js.put("arriveTime", sf.format(record.getVisitTime()));
+                    }
+                    if (record.getLeaveTime() != null) {
+                        js.put("leaveTime", sf.format(record.getLeaveTime()));
+                    }
+                    js.put("city", record.getCity());
+                    js.put("praise", record.getResultCode());
+                    JSONArray jar = new JSONArray();
+
+                    String path = request.getServletContext().getRealPath("/recordImages")
+                            + File.separator;
+                    for (int i = 0; i < 6; ++i) {
+                        String url = path + record.getId() + "_" + i + ".jpg";
+                        File f = new File(url);
+                        if (f.exists()) {
+                            JSONObject job = new JSONObject();
+                            job.put("imageUrl",
+                                    request.getRequestURL().substring(0,
+                                            request.getRequestURL().length() - 23)
+                                            + "/record.do?action=getImage&path="
+                                            + record.getId()
+                                            + "_" + i + ".jpg");
+                            jar.put(job);
+                        }
+                    }
+                    js.put("imageList", jar);
+                    ja.put(js);
+                }
+            }
+            json.put("dataInfo", ja);
+            json.put("total", pset.getTotal());
+            json.put("retcode", "000000");
+            json.put("retinfo", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("retcode", "000001");
+            json.put("retinfo", "exception");
+        }
+        write(response, json);
+    }
 	
 	@RequestMapping({ "getVersionInfo" })
 	public void getVersionInfo(HttpServletRequest request, HttpServletResponse response) {
