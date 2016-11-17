@@ -4,6 +4,7 @@ import com.jude.entity.Customer;
 import com.jude.entity.CustomerManager;
 import com.jude.entity.Task;
 import com.jude.entity.Workflow;
+import com.jude.entity.WorkflowReply;
 import com.jude.json.JSONArray;
 import com.jude.json.JSONObject;
 import com.jude.service.CustomerManagerService;
@@ -280,7 +281,35 @@ public class WorkflowController {
         workflow.setDescription(description);
         workflow.setRemark(remark);
         workflowService.addWorkflow(workflow);
-        
-        return ExtJS.ok("发起任务成功！");
+
+        return ExtJS.ok("交办成功！");
+    }
+
+    @RequestMapping(params = { "action=dealWorkflowSubmit" })
+    @ResponseBody
+    public JSONObject dealWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
+        String reply = request.getParameter("reply");
+        String remark = request.getParameter("remark");
+        long workflowId = Long.parseLong(request.getParameter("workflowId"));
+        int orderNum = Integer.parseInt(request.getParameter("orderNum"));
+        long handlerId = Long.parseLong(request.getParameter("handlerId"));
+        CustomerManager handler = this.customerManagerService.getCustomerManager(handlerId);
+        Date handleTime = null;
+        try {
+            handleTime = sf.parse(request.getParameter("handleTime"));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        WorkflowReply workflowReply = new WorkflowReply();
+        workflowReply.setReply(reply);
+        workflowReply.setRemark(remark);
+        workflowReply.setWorkflowId(workflowId);
+        workflowReply.setOrderNum(orderNum);
+        workflowReply.setHandler(handler);
+        workflowReply.setHandleTime(handleTime);
+        workflowService.addWorkflowReply(workflowReply);
+
+        return ExtJS.ok("交办成功！");
     }
 }

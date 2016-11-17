@@ -31,8 +31,6 @@ public class Workflow implements Serializable {
 
 	private String remark;
 
-	private List<InteractiveItem> interactiveItems;
-
 	public Long getId() {
 		return id;
 	}
@@ -111,14 +109,6 @@ public class Workflow implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public List<InteractiveItem> getInteractiveItems() {
-		return interactiveItems;
-	}
-
-	public void setInteractiveItems(List<InteractiveItem> interactiveItems) {
-		this.interactiveItems = interactiveItems;
 	}
 
 }
