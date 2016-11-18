@@ -496,15 +496,16 @@ public class MobileController {
         }
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
-        StringBuffer where = new StringBuffer();
-        where.append(" and w.solvedTime is null");
-        where.append(" and m.id = ").append(userId);
-        if (keyword.length() > 0) {
-            where.append(" and (c.name like '%").append(keyword).append("%'");
-            where.append(" or c.sell_number like '%").append(keyword).append("%'");
-            where.append(" or c.phone_number like '%").append(keyword).append("%'");
-            where.append(" or c.backup_number like '%").append(keyword).append("%')");
+        StringBuffer where = new StringBuffer(" and w.solved_time");
+        if (userId != 0) {
+            where.append(" and w.handler_id = ").append(userId);
         }
+//        if (keyword.length() > 0) {
+//            where.append(" and (c.name like '%").append(keyword).append("%'");
+//            where.append(" or c.sell_number like '%").append(keyword).append("%'");
+//            where.append(" or c.phone_number like '%").append(keyword).append("%'");
+//            where.append(" or c.backup_number like '%").append(keyword).append("%')");
+//        }
         try {
             PagingSet pset = this.recordService.queryVisitRecords(start, limit, where.toString(), "visit_time", "DESC");
             List<VisitRecord> list = pset.getList();
