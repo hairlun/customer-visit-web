@@ -497,9 +497,8 @@ public class MobileController {
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
         StringBuffer where = new StringBuffer();
-        if (userId != 1) {
-            where.append(" and m.id = ").append(userId);
-        }
+        where.append(" and w.solvedTime is null");
+        where.append(" and m.id = ").append(userId);
         if (keyword.length() > 0) {
             where.append(" and (c.name like '%").append(keyword).append("%'");
             where.append(" or c.sell_number like '%").append(keyword).append("%'");

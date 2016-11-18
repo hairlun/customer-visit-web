@@ -278,6 +278,7 @@ public class WorkflowController {
         workflow.setReceiveTime(receiveTime);
         workflow.setProblemFinder(problemFinder);
         workflow.setHandleTime(handleTime);
+        
         workflow.setDescription(description);
         workflow.setRemark(remark);
         workflowService.addWorkflow(workflow);

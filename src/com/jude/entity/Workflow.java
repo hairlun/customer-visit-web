@@ -22,6 +22,8 @@ public class Workflow implements Serializable {
 	private CustomerManager problemFinder;
 
 	private Date handleTime;
+	
+	private CustomerManager currentHandler;
 
 	private CustomerManager handler;
 
@@ -79,7 +81,15 @@ public class Workflow implements Serializable {
 		this.handleTime = handleTime;
 	}
 
-	public CustomerManager getHandler() {
+	public CustomerManager getCurrentHandler() {
+        return currentHandler;
+    }
+
+    public void setCurrentHandler(CustomerManager currentHandler) {
+        this.currentHandler = currentHandler;
+    }
+
+    public CustomerManager getHandler() {
 		return handler;
 	}
 
