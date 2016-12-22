@@ -44,7 +44,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 
     public void updateWorkflow(Workflow workflow) {
         this.jdbcTemplate
-                .update("update workflow set customer_id, address, receive_time, problem_finder_id, handle_time, handler_id, solved_time, description, remark = ? where id = ?",
+                .update("update workflow set customer_id = ?, address = ?, receive_time = ?, problem_finder_id = ?, handle_time = ?, handler_id = ?, solved_time = ?, description = ?, remark = ? where id = ?",
                         new Object[] { workflow.getCustomer().getId(),
                                 workflow.getAddress(),
                                 workflow.getReceiveTime(),
@@ -138,14 +138,15 @@ public class WorkflowDaoImpl implements WorkflowDao {
     @Override
     public void addWorkflowReply(WorkflowReply workflowReply) {
         this.jdbcTemplate
-                .update("insert into workflow_reply(id, reply, remark, workflow_id, order_num, handle_time, handler_id) values(?, ?, ?, ?, ?, ?, ?)",
+                .update("insert into workflow_reply(id, reply, remark, workflow_id, order_num, handle_time, handler_id, current_handler_id) values(?, ?, ?, ?, ?, ?, ?, ?)",
                         new Object[] { workflowReply.getId(),
                                 workflowReply.getReply(),
                                 workflowReply.getRemark(),
                                 workflowReply.getWorkflowId(),
                                 workflowReply.getOrderNum(),
                                 workflowReply.getHandleTime(),
-                                workflowReply.getHandler().getId() });
+                                workflowReply.getHandler().getId(),
+                                workflowReply.getCurrentHandler().getId() });
     }
 
     @Override
@@ -156,7 +157,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 
     @Override
     public WorkflowReply getWorkflowReply(long id) {
-        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id where w.id = "
+        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, ch.id as chid, ch.name as chname, ch.username as chusername, ch.department as chdepartment, ch.area as charea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN customer_manager ch on w.current_handler_id = ch.id where w.id = "
                 + id;
 
         List<WorkflowReply> workflowReplies = this.jdbcTemplate.query(sql,
@@ -170,20 +171,21 @@ public class WorkflowDaoImpl implements WorkflowDao {
     @Override
     public void updateWorkflowReply(WorkflowReply workflowReply) {
         this.jdbcTemplate
-                .update("update workflow_reply set reply, remark, workflow_id, order_num, handle_time, handler_id = ? where id = ?",
+                .update("update workflow_reply set reply = ?, remark = ?, workflow_id = ?, order_num = ?, handle_time = ?, handler_id = ?, current_handler_id = ? where id = ?",
                         new Object[] { workflowReply.getReply(),
                                 workflowReply.getRemark(),
                                 workflowReply.getWorkflowId(),
                                 workflowReply.getOrderNum(),
                                 workflowReply.getHandleTime(),
                                 workflowReply.getHandler().getId(),
+                                workflowReply.getCurrentHandler().getId(),
                                 workflowReply.getId() });
     }
 
     @Override
     public PagingSet<WorkflowReply> queryWorkflowReplies(int start, int limit,
             String condition, String sort, String dir) {
-        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id where 1 = 1 ";
+        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, ch.id as chid, ch.name as chname, ch.username as chusername, ch.department as chdepartment, ch.area as charea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN customer_manager ch on w.current_handler_id = ch.id where 1 = 1 ";
         if (condition != null && !condition.equals("")) {
             sql = sql + condition;
         }
@@ -198,7 +200,7 @@ public class WorkflowDaoImpl implements WorkflowDao {
 
     @Override
     public List<WorkflowReply> queryWorkflowRepliesByIds(String ids) {
-        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id where w.id in ("
+        String sql = "select w.id, w.reply, w.remark, w.workflow_id, w.order_num, w.handle_time, w.handler_id, h.id as hid, h.name as hname, h.username as husername, h.department as hdepartment, h.area as harea, ch.id as chid, ch.name as chname, ch.username as chusername, ch.department as chdepartment, ch.area as charea from workflow_reply w LEFT JOIN customer_manager h on w.handler_id = h.id LEFT JOIN customer_manager ch on w.current_handler_id = ch.id where w.id in ("
                 + ids + ")";
         return this.jdbcTemplate.query(sql, new WorkflowReplyRowMapper());
     }
@@ -221,6 +223,13 @@ public class WorkflowDaoImpl implements WorkflowDao {
             handler.setDepartment(rs.getString("h.department"));
             handler.setArea(rs.getString("h.area"));
             workflowReply.setHandler(handler);
+            CustomerManager currentHandler = new CustomerManager();
+            currentHandler.setId(rs.getLong("ch.id"));
+            currentHandler.setName(rs.getString("ch.name"));
+            currentHandler.setUsername(rs.getString("ch.username"));
+            currentHandler.setDepartment(rs.getString("ch.department"));
+            currentHandler.setArea(rs.getString("ch.area"));
+            workflowReply.setCurrentHandler(currentHandler);
             return workflowReply;
         }
     }

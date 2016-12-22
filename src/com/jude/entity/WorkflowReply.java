@@ -22,6 +22,8 @@ public class WorkflowReply implements Serializable {
 	
 	private CustomerManager handler;
 	
+	private CustomerManager currentHandler;
+	
 	private Date handleTime;
 
 	public long getId() {
@@ -72,7 +74,15 @@ public class WorkflowReply implements Serializable {
         this.handler = handler;
     }
 
-    public Date getHandleTime() {
+    public CustomerManager getCurrentHandler() {
+		return currentHandler;
+	}
+
+	public void setCurrentHandler(CustomerManager currentHandler) {
+		this.currentHandler = currentHandler;
+	}
+
+	public Date getHandleTime() {
         return handleTime;
     }
 

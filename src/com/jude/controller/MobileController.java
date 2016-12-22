@@ -61,7 +61,7 @@ public class MobileController {
 
 	@Autowired
 	private VisitRecordService recordService;
-	
+
 	@Autowired
 	private WorkflowService workflowService;
 
@@ -122,7 +122,7 @@ public class MobileController {
 				write(response, json);
 				return;
 			}
-			
+
 			long taskId = Long.parseLong(request.getParameter("serviceId"));
 			VisitRecord record = this.recordService.getVisitRecordByTaskId(taskId);
 			Customer customer = record.getCustomer();
@@ -130,10 +130,10 @@ public class MobileController {
 			if (code != null) {
 				code = code.trim();
 			}
-			if (code == null ||
-					!(code.equals("满意") ||
-					(customer.getNumber() != null && code.equals(customer.getNumber())) ||
-					(customer.getSellNumber() != null && code.equals(customer.getSellNumber())))) {
+			if (code == null
+					|| !(code.equals("满意")
+							|| (customer.getNumber() != null && code.equals(customer.getNumber())) || (customer
+							.getSellNumber() != null && code.equals(customer.getSellNumber())))) {
 				json.put("retcode", "000003");
 				json.put("retinfo", "二维码不正确！");
 				write(response, json);
@@ -160,7 +160,8 @@ public class MobileController {
 					cLatF = Double.parseDouble(gps.substring(gps.indexOf(",") + 1));
 					cLngF = Double.parseDouble(gps.substring(0, gps.indexOf(",")));
 					double lngDist = Math.abs(lngF - cLngF) * 1110000;
-					double latDist = Math.abs(latF - cLatF) * 1110000 * Math.cos(Math.PI * cLatF / 180);
+					double latDist = Math.abs(latF - cLatF) * 1110000
+							* Math.cos(Math.PI * cLatF / 180);
 					double gpsDist = (int) Math.sqrt(lngDist * lngDist + latDist * latDist);
 					if (gpsDist > 2000) {
 						json.put("retcode", "000003");
@@ -222,7 +223,8 @@ public class MobileController {
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		try {
-			PagingSet<Task> set = this.taskService.getManagerTask(userId, start, limit, type, keyword, startTime, endTime);
+			PagingSet<Task> set = this.taskService.getManagerTask(userId, start, limit, type,
+					keyword, startTime, endTime);
 			List<Task> ts = set.getList();
 			if ((ts != null) && (ts.size() > 0)) {
 				for (Task t : ts) {
@@ -248,7 +250,7 @@ public class MobileController {
 
 		write(response, json);
 	}
-	
+
 	@RequestMapping({ "queryServiceStatus" })
 	public void queryServiceStatus(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject json = new JSONObject();
@@ -260,25 +262,25 @@ public class MobileController {
 			int contentFlag = 1;
 			int praiseFlag = 1;
 			int takePhotoFlag = 1;
-//			if (vr.getReject() != 1) {
-				if (vr.getType() == 0) {
-					contentFlag = 0;
-					takePhotoFlag = 0;
+			// if (vr.getReject() != 1) {
+			if (vr.getType() == 0) {
+				contentFlag = 0;
+				takePhotoFlag = 0;
+				praiseFlag = 0;
+				codeExitFlag = 0;
+			} else if (vr.getType() == 1) {
+				codeSignFlag = 0;
+				if (vr.getResultCode() == 1) {
 					praiseFlag = 0;
-					codeExitFlag = 0;
-				} else if (vr.getType() == 1) {
-					codeSignFlag = 0;
-					if (vr.getResultCode() == 1) {
-						praiseFlag = 0;
-					}
-				} else if (vr.getType() == 2) {
-					codeSignFlag = 0;
-					if (vr.getResultCode() == 1) {
-						praiseFlag = 0;
-					}
-					codeExitFlag = 0;
 				}
-//			}
+			} else if (vr.getType() == 2) {
+				codeSignFlag = 0;
+				if (vr.getResultCode() == 1) {
+					praiseFlag = 0;
+				}
+				codeExitFlag = 0;
+			}
+			// }
 			json.put("codeSignFlag", codeSignFlag);
 			json.put("codeExitFlag", codeExitFlag);
 			json.put("contentFlag", contentFlag);
@@ -286,7 +288,7 @@ public class MobileController {
 			json.put("praiseFlag", praiseFlag);
 			json.put("retcode", "000000");
 			json.put("retinfo", "success");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			json.put("retcode", "000001");
 			json.put("retinfo", "exception");
@@ -378,10 +380,10 @@ public class MobileController {
 			if (code != null) {
 				code = code.trim();
 			}
-			if (code == null ||
-					!(code.equals("满意") ||
-					(customer.getNumber() != null && code.equals(customer.getNumber())) ||
-					(customer.getSellNumber() != null && code.equals(customer.getSellNumber())))) {
+			if (code == null
+					|| !(code.equals("满意")
+							|| (customer.getNumber() != null && code.equals(customer.getNumber())) || (customer
+							.getSellNumber() != null && code.equals(customer.getSellNumber())))) {
 				json.put("retcode", "000003");
 				json.put("retinfo", "二维码不正确！");
 				write(response, json);
@@ -432,7 +434,8 @@ public class MobileController {
 			where.append(" or c.backup_number like '%").append(keyword).append("%')");
 		}
 		try {
-			PagingSet pset = this.recordService.queryVisitRecords(start, limit, where.toString(), "visit_time", "DESC");
+			PagingSet pset = this.recordService.queryVisitRecords(start, limit, where.toString(),
+					"visit_time", "DESC");
 			List<VisitRecord> list = pset.getList();
 			JSONArray ja = new JSONArray();
 			if ((list != null) && (list.size() > 0)) {
@@ -480,256 +483,325 @@ public class MobileController {
 		}
 		write(response, json);
 	}
-	
+
 	@RequestMapping({ "newWorkflowSubmit" })
 	public void newWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
-	    JSONObject json = new JSONObject();
-	    try {
-    	    String userId = request.getParameter("userId");
-            String customerId = request.getParameter("customerId");
-            String address = request.getParameter("address");
-            String receiveTimeStr = request.getParameter("receiveTime");
-            String handlerId = request.getParameter("handlerId");
-            String description = request.getParameter("description");
-            String remark = request.getParameter("remark");
-            if (StringUtils.isBlank(userId) || StringUtils.isBlank(customerId) ||
-                    StringUtils.isBlank(address) || StringUtils.isBlank(receiveTimeStr) ||
-                    StringUtils.isBlank(handlerId) || StringUtils.isBlank(description)) {
-                json.put("retcode", "000003");
-                json.put("retinfo", "参数不正确");
-                write(response, json);
-                return;
-            }
-            Customer customer = customerService.getCustomersByIds(customerId).get(0);
-            Date receiveTime = null;
-            try {
-                receiveTime = DATETIME_FMT.parse(receiveTimeStr);
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            CustomerManager problemFinder = managerService.getCustomerManager(Long.parseLong(userId));
-            CustomerManager handler = managerService.getCustomerManager(Long.parseLong(handlerId));
-            Date handleTime = new Date();
-            Workflow workflow = new Workflow();
-            workflow.setCustomer(customer);
-            workflow.setAddress(address);
-            workflow.setReceiveTime(receiveTime);
-            workflow.setProblemFinder(problemFinder);
-            workflow.setHandleTime(handleTime);
-            workflow.setHandler(handler);
-            workflow.setCurrentHandler(handler);
-            workflow.setDescription(description);
-            workflow.setRemark(remark);
-            workflowService.addWorkflow(workflow);
-            json.put("retcode", "000000");
-            json.put("retinfo", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            json.put("retcode", "000001");
-            json.put("retinfo", "exception");
-        }
-        write(response, json);
+		JSONObject json = new JSONObject();
+		try {
+			String userId = request.getParameter("userId");
+			String customerId = request.getParameter("customerId");
+			String address = request.getParameter("address");
+			String receiveTimeStr = request.getParameter("receiveTime");
+			String handlerId = request.getParameter("handlerId");
+			String description = request.getParameter("description");
+			String remark = request.getParameter("remark");
+			if (StringUtils.isBlank(userId) || StringUtils.isBlank(customerId)
+					|| StringUtils.isBlank(address) || StringUtils.isBlank(receiveTimeStr)
+					|| StringUtils.isBlank(handlerId) || StringUtils.isBlank(description)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			Customer customer = customerService.getCustomersByIds(customerId).get(0);
+			Date receiveTime = null;
+			try {
+				receiveTime = DATETIME_FMT.parse(receiveTimeStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			CustomerManager problemFinder = managerService.getCustomerManager(Long
+					.parseLong(userId));
+			CustomerManager handler = managerService.getCustomerManager(Long.parseLong(handlerId));
+			Date handleTime = new Date();
+			Workflow workflow = new Workflow();
+			workflow.setCustomer(customer);
+			workflow.setAddress(address);
+			workflow.setReceiveTime(receiveTime);
+			workflow.setProblemFinder(problemFinder);
+			workflow.setHandleTime(handleTime);
+			workflow.setHandler(handler);
+			workflow.setCurrentHandler(handler);
+			workflow.setDescription(description);
+			workflow.setRemark(remark);
+			workflowService.addWorkflow(workflow);
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+		write(response, json);
 	}
-    
-    @RequestMapping({ "dealWorkflowSubmit" })
-    public void dealWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject json = new JSONObject();
-        try {
-            String userId = request.getParameter("userId");
-            String workflowIdStr = request.getParameter("workflowId");
-            String orderNumStr = request.getParameter("orderNum");
-            String handlerId = request.getParameter("handlerId");
-            String reply = request.getParameter("reply");
-            String remark = request.getParameter("remark");
-            if (StringUtils.isBlank(userId) || StringUtils.isBlank(handlerId) ||
-                    StringUtils.isBlank(reply) || StringUtils.isBlank(workflowIdStr)) {
-                json.put("retcode", "000003");
-                json.put("retinfo", "参数不正确");
-                write(response, json);
-                return;
-            }
-            CustomerManager handler = managerService.getCustomerManager(Long.parseLong(handlerId));
-            Date handleTime = new Date();
-            WorkflowReply workflowReply = new WorkflowReply();
-            workflowReply.setWorkflowId(Long.parseLong(workflowIdStr));
-            workflowReply.setOrderNum(Integer.parseInt(orderNumStr));
-            workflowReply.setHandleTime(handleTime);
-            workflowReply.setHandler(handler);
-            workflowReply.setReply(reply);
-            workflowReply.setRemark(remark);
-            workflowService.addWorkflowReply(workflowReply);
-            json.put("retcode", "000000");
-            json.put("retinfo", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            json.put("retcode", "000001");
-            json.put("retinfo", "exception");
-        }
-    }
 
-    @RequestMapping({ "dealWorkflow" })
-    public void dealWorkflow(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject json = new JSONObject();
-        try {
-            String userId = request.getParameter("userId");
-            String workflowId = request.getParameter("workflowId");
-            if (StringUtils.isBlank(userId) || StringUtils.isBlank(workflowId)) {
-                json.put("retcode", "000003");
-                json.put("retinfo", "参数不正确");
-                write(response, json);
-                return;
-            }
-            Workflow workflow = this.workflowService.getWorkflow(Long.parseLong(workflowId));
-            List<WorkflowReply> list = this.workflowService.queryWorkflowReplies(0, 100000, " and w.workflow_id = " + workflowId, "w.handle_time", "ASC").getList();
-            JSONObject js = new JSONObject();
-            js.put("customer", workflow.getCustomer().getName());
-            js.put("address", workflow.getAddress());
-            js.put("sellNumber", workflow.getCustomer().getSellNumber());
-            js.put("receive_time", DATETIME_FMT.format(workflow.getReceiveTime()));
-            js.put("problem_finder", workflow.getProblemFinder().getName());
-            js.put("handle_time", DATETIME_FMT.format(workflow.getHandleTime()));
-            js.put("handler", workflow.getHandler().getName());
-            js.put("description", workflow.getDescription());
-            js.put("remark", workflow.getRemark());
-            JSONArray ja = new JSONArray();
-            int size = list.size();
-            if (list != null && size > 0) {
-                for (int i = 0; i < size; i++) {
-                    WorkflowReply reply = list.get(i);
-                    JSONObject jo = new JSONObject();
-                    jo.put("reply", reply.getReply());
-                    jo.put("remark", reply.getRemark());
-                    jo.put("handle_time", reply.getHandleTime());
-                }
-                
-            }
-            json.put("retcode", "000000");
-            json.put("retinfo", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            json.put("retcode", "000001");
-            json.put("retinfo", "exception");
-        }
-    }
+	@RequestMapping({ "dealWorkflowSubmit" })
+	public void dealWorkflowSubmit(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		try {
+			String userId = request.getParameter("userId");
+			String workflowIdStr = request.getParameter("workflowId");
+			String orderNumStr = request.getParameter("orderNum");
+			String handlerId = request.getParameter("handlerId");
+			String reply = request.getParameter("reply");
+			String remark = request.getParameter("remark");
+			if (StringUtils.isBlank(userId) || StringUtils.isBlank(handlerId)
+					|| StringUtils.isBlank(reply) || StringUtils.isBlank(workflowIdStr)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			CustomerManager handler = managerService.getCustomerManager(Long.parseLong(handlerId));
+			Date handleTime = new Date();
+			WorkflowReply workflowReply = new WorkflowReply();
+			workflowReply.setWorkflowId(Long.parseLong(workflowIdStr));
+			workflowReply.setOrderNum(Integer.parseInt(orderNumStr));
+			workflowReply.setHandleTime(handleTime);
+			workflowReply.setHandler(handler);
+			workflowReply.setReply(reply);
+			workflowReply.setRemark(remark);
+			workflowService.addWorkflowReply(workflowReply);
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+	}
 
-    @RequestMapping({ "dealWorkflowList" })
-    public void dealWorkflowList(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject json = new JSONObject();
-        try {
-            if (StringUtils.isBlank(request.getParameter("userId"))) {
-                json.put("retcode", "000003");
-                json.put("retinfo", "参数不正确");
-                write(response, json);
-                return;
-            }
-            Long userId = Long.parseLong(request.getParameter("userId"));
-            int page = NumberUtils.toInt((String) request.getParameter("page"), 1);
-            int limit = NumberUtils.toInt((String) request.getParameter("limit"), -1);
-            if (limit == -1) {
-                page = 1;
-                limit = 1000000;
-            }
-            int start = page * limit - limit;
-            String keyword = request.getParameter("keyword");
-            if (keyword == null) {
-                keyword = "";
-            }
-            StringBuffer where = new StringBuffer();
-            where.append(" and w.current_handler_id = ").append(userId);
-            PagingSet pset = this.workflowService.queryWorkflows(start, limit, where.toString(), "w.handle_time", "DESC");
-            List<Workflow> list = pset.getList();
-            JSONArray ja = new JSONArray();
-            if ((list != null) && (list.size() > 0)) {
-                for (Workflow workflow : list) {
-                    JSONObject js = new JSONObject();
-                    js.put("customer", workflow.getCustomer().getName());
-                    js.put("problemFinder", workflow.getProblemFinder().getName());
-                    if (workflow.getReceiveTime() != null) {
-                        js.put("receiveTime", DATETIME_FMT.format(workflow.getReceiveTime()));
-                    }
-                    if (workflow.getHandleTime() != null) {
-                        js.put("handleTime", DATETIME_FMT.format(workflow.getHandleTime()));
-                    }
-                    int len = workflow.getDescription().length();
-                    if (len > 20) {
-                        js.put("brief", workflow.getDescription().substring(0, 19) + "…");
-                    } else {
-                        js.put("brief", workflow.getDescription());
-                    }
-                    ja.put(js);
-                }
-            }
-            json.put("dataInfo", ja);
-            json.put("total", pset.getTotal());
-            json.put("retcode", "000000");
-            json.put("retinfo", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            json.put("retcode", "000001");
-            json.put("retinfo", "exception");
-        }
-        write(response, json);
-    }
+	@RequestMapping({ "dealWorkflow" })
+	public void dealWorkflow(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		try {
+			String userId = request.getParameter("userId");
+			String workflowId = request.getParameter("workflowId");
+			if (StringUtils.isBlank(userId) || StringUtils.isBlank(workflowId)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			Workflow workflow = this.workflowService.getWorkflow(Long.parseLong(workflowId));
+			List<WorkflowReply> list = this.workflowService.queryWorkflowReplies(0, 100000,
+					" and w.workflow_id = " + workflowId, "w.handle_time", "ASC").getList();
+			Long currentHandler = workflow.getCurrentHandler().getId();
+			if (!String.valueOf(currentHandler).equals(userId)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			JSONObject js = new JSONObject();
+			js.put("customer", workflow.getCustomer().getName());
+			js.put("address", workflow.getAddress());
+			js.put("sellNumber", workflow.getCustomer().getSellNumber());
+			js.put("receive_time", DATETIME_FMT.format(workflow.getReceiveTime()));
+			js.put("problem_finder", workflow.getProblemFinder().getName());
+			js.put("handle_time", DATETIME_FMT.format(workflow.getHandleTime()));
+			js.put("handler_name", workflow.getHandler().getName());
+			js.put("description", workflow.getDescription());
+			js.put("remark", workflow.getRemark());
+			JSONArray ja = new JSONArray();
+			int size = list.size();
+			if (list != null && size > 0) {
+				for (int i = 0; i < size; i++) {
+					WorkflowReply reply = list.get(i);
+					JSONObject jo = new JSONObject();
+					jo.put("reply", reply.getReply());
+					jo.put("remark", reply.getRemark());
+					jo.put("handle_time", reply.getHandleTime());
+					jo.put("current_handler_name", reply.getCurrentHandler().getName());
+					ja.put(jo);
+				}
+				js.put("replies", ja);
+			}
+			json.put("dataInfo", js);
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+	}
 
-    @RequestMapping({ "viewWorkflowList" })
-    public void viewWorkflowList(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject json = new JSONObject();
-        try {
-            String userIdStr = request.getParameter("userId");
-            if (StringUtils.isBlank(userIdStr)) {
-                json.put("retcode", "000003");
-                json.put("retinfo", "参数不正确");
-                write(response, json);
-                return;
-            }
-            Long userId = Long.parseLong(userIdStr);
-            int page = NumberUtils.toInt((String) request.getParameter("page"), 1);
-            int limit = NumberUtils.toInt((String) request.getParameter("limit"), -1);
-            if (limit == -1) {
-                page = 1;
-                limit = 1000000;
-            }
-            int start = page * limit - limit;
-            String keyword = request.getParameter("keyword");
-            if (keyword == null) {
-                keyword = "";
-            }
-            StringBuffer where = new StringBuffer();
-            PagingSet pset = this.workflowService.queryWorkflows(start, limit, where.toString(), "w.handle_time", "DESC");
-            List<Workflow> list = pset.getList();
-            JSONArray ja = new JSONArray();
-            if ((list != null) && (list.size() > 0)) {
-                for (Workflow workflow : list) {
-                    JSONObject js = new JSONObject();
-                    js.put("customer", workflow.getCustomer().getName());
-                    js.put("problemFinder", workflow.getProblemFinder().getName());
-                    if (workflow.getReceiveTime() != null) {
-                        js.put("receiveTime", DATETIME_FMT.format(workflow.getReceiveTime()));
-                    }
-                    if (workflow.getHandleTime() != null) {
-                        js.put("handleTime", DATETIME_FMT.format(workflow.getHandleTime()));
-                    }
-                    int len = workflow.getDescription().length();
-                    if (len > 20) {
-                        js.put("brief", workflow.getDescription().substring(0, 19) + "…");
-                    } else {
-                        js.put("brief", workflow.getDescription());
-                    }
-                    ja.put(js);
-                }
-            }
-            json.put("dataInfo", ja);
-            json.put("total", pset.getTotal());
-            json.put("retcode", "000000");
-            json.put("retinfo", "success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            json.put("retcode", "000001");
-            json.put("retinfo", "exception");
-        }
-        write(response, json);
-    }
+	@RequestMapping({ "viewWorkflow" })
+	public void viewWorkflow(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		try {
+			String userId = request.getParameter("userId");
+			String workflowId = request.getParameter("workflowId");
+			if (StringUtils.isBlank(userId) || StringUtils.isBlank(workflowId)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			Workflow workflow = this.workflowService.getWorkflow(Long.parseLong(workflowId));
+			List<WorkflowReply> list = this.workflowService.queryWorkflowReplies(0, 100000,
+					" and w.workflow_id = " + workflowId, "w.handle_time", "ASC").getList();
+			JSONObject js = new JSONObject();
+			js.put("customer", workflow.getCustomer().getName());
+			js.put("address", workflow.getAddress());
+			js.put("sellNumber", workflow.getCustomer().getSellNumber());
+			js.put("receive_time", DATETIME_FMT.format(workflow.getReceiveTime()));
+			js.put("problem_finder", workflow.getProblemFinder().getName());
+			js.put("handle_time", DATETIME_FMT.format(workflow.getHandleTime()));
+			js.put("handler_name", workflow.getHandler().getName());
+			js.put("description", workflow.getDescription());
+			js.put("remark", workflow.getRemark());
+			JSONArray ja = new JSONArray();
+			int size = list.size();
+			if (list != null && size > 0) {
+				for (int i = 0; i < size; i++) {
+					WorkflowReply reply = list.get(i);
+					JSONObject jo = new JSONObject();
+					jo.put("reply", reply.getReply());
+					jo.put("remark", reply.getRemark());
+					jo.put("handle_time", reply.getHandleTime());
+					jo.put("current_handler_name", reply.getCurrentHandler().getName());
+					ja.put(jo);
+				}
+				js.put("replies", ja);
+			}
+			json.put("dataInfo", js);
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+	}
+
+	@RequestMapping({ "dealWorkflowList" })
+	public void dealWorkflowList(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		try {
+			if (StringUtils.isBlank(request.getParameter("userId"))) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			Long userId = Long.parseLong(request.getParameter("userId"));
+			int page = NumberUtils.toInt((String) request.getParameter("page"), 1);
+			int limit = NumberUtils.toInt((String) request.getParameter("limit"), -1);
+			if (limit == -1) {
+				page = 1;
+				limit = 1000000;
+			}
+			int start = page * limit - limit;
+			String keyword = request.getParameter("keyword");
+			if (keyword == null) {
+				keyword = "";
+			}
+			StringBuffer where = new StringBuffer();
+			where.append(" and w.current_handler_id = ").append(userId);
+			PagingSet pset = this.workflowService.queryWorkflows(start, limit, where.toString(),
+					"w.handle_time", "DESC");
+			List<Workflow> list = pset.getList();
+			JSONArray ja = new JSONArray();
+			if ((list != null) && (list.size() > 0)) {
+				for (Workflow workflow : list) {
+					JSONObject js = new JSONObject();
+					js.put("customer", workflow.getCustomer().getName());
+					js.put("problemFinder", workflow.getProblemFinder().getName());
+					if (workflow.getReceiveTime() != null) {
+						js.put("receiveTime", DATETIME_FMT.format(workflow.getReceiveTime()));
+					}
+					if (workflow.getHandleTime() != null) {
+						js.put("handleTime", DATETIME_FMT.format(workflow.getHandleTime()));
+					}
+					int len = workflow.getDescription().length();
+					if (len > 20) {
+						js.put("brief", workflow.getDescription().substring(0, 19) + "…");
+					} else {
+						js.put("brief", workflow.getDescription());
+					}
+					ja.put(js);
+				}
+			}
+			json.put("dataInfo", ja);
+			json.put("total", pset.getTotal());
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+		write(response, json);
+	}
+
+	@RequestMapping({ "viewWorkflowList" })
+	public void viewWorkflowList(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		try {
+			String userIdStr = request.getParameter("userId");
+			if (StringUtils.isBlank(userIdStr)) {
+				json.put("retcode", "000003");
+				json.put("retinfo", "参数不正确");
+				write(response, json);
+				return;
+			}
+			Long userId = Long.parseLong(userIdStr);
+			int page = NumberUtils.toInt((String) request.getParameter("page"), 1);
+			int limit = NumberUtils.toInt((String) request.getParameter("limit"), -1);
+			if (limit == -1) {
+				page = 1;
+				limit = 1000000;
+			}
+			int start = page * limit - limit;
+			String keyword = request.getParameter("keyword");
+			if (keyword == null) {
+				keyword = "";
+			}
+			StringBuffer where = new StringBuffer();
+			where.append(" and ((w.problem_finder_id = ")
+					.append(userId)
+					.append(" and w.current_handler_id != ")
+					.append(userId)
+					.append(") or (w.id in (SELECT r.workflow_id from workflow_reply r WHERE r.handler_id = ")
+					.append(userId).append(" GROUP BY r.workflow_id)))");
+			PagingSet pset = this.workflowService.queryWorkflows(start, limit, where.toString(),
+					"w.handle_time", "DESC");
+			List<Workflow> list = pset.getList();
+			JSONArray ja = new JSONArray();
+			if ((list != null) && (list.size() > 0)) {
+				for (Workflow workflow : list) {
+					JSONObject js = new JSONObject();
+					js.put("customer", workflow.getCustomer().getName());
+					js.put("problemFinder", workflow.getProblemFinder().getName());
+					if (workflow.getReceiveTime() != null) {
+						js.put("receiveTime", DATETIME_FMT.format(workflow.getReceiveTime()));
+					}
+					if (workflow.getHandleTime() != null) {
+						js.put("handleTime", DATETIME_FMT.format(workflow.getHandleTime()));
+					}
+					int len = workflow.getDescription().length();
+					if (len > 20) {
+						js.put("brief", workflow.getDescription().substring(0, 19) + "…");
+					} else {
+						js.put("brief", workflow.getDescription());
+					}
+					ja.put(js);
+				}
+			}
+			json.put("dataInfo", ja);
+			json.put("total", pset.getTotal());
+			json.put("retcode", "000000");
+			json.put("retinfo", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			json.put("retcode", "000001");
+			json.put("retinfo", "exception");
+		}
+		write(response, json);
+	}
 
 	@RequestMapping({ "getVersionInfo" })
 	public void getVersionInfo(HttpServletRequest request, HttpServletResponse response) {
@@ -764,8 +836,7 @@ public class MobileController {
 		String path = request.getParameter("path");
 		File file = new File(path);
 		if (!file.exists()) {
-			file = new File(request.getServletContext().getRealPath("/app")
-					+ File.separator + path);
+			file = new File(request.getServletContext().getRealPath("/app") + File.separator + path);
 		}
 		InputStream is = new FileInputStream(file);
 		IOUtils.copy(is, response.getOutputStream());
